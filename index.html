@@ -1,0 +1,2608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>JobShield — Jobsite Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#13151a; --bg-1:#1c1f28; --bg-2:#242834; --bg-3:#2d3242;
+  --border:rgba(255,255,255,.13); --border-2:rgba(255,255,255,.22);
+  --text:#f4f6fa; --text-2:#b0b8cc; --text-3:#7a84a0;
+  --blue:#4f8ef7; --blue-dim:rgba(79,142,247,.18);
+  --green:#22d37a; --green-dim:rgba(34,211,122,.14);
+  --red:#f05252; --red-dim:rgba(240,82,82,.14);
+  --amber:#f59e0b; --violet:#a78bfa; --violet-dim:rgba(167,139,250,.14);
+  --r:8px; --r-sm:6px;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+  --shadow-lg:0 8px 40px rgba(0,0,0,.5);
+}
+body { font-family:'Geist',system-ui,sans-serif; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; min-height:100vh; }
+::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-track{background:transparent} ::-webkit-scrollbar-thumb{background:var(--bg-3);border-radius:99px}
+
+/* ── Screens ── */
+.screen{display:none;min-height:100vh;flex-direction:column}
+.screen.active{display:flex}
+#screen-login{display:none;flex-direction:row}
+#screen-login.active{display:flex}
+
+/* screens below */
+
+/* ── Nav ── */
+nav{height:56px;border-bottom:1px solid var(--border);background:rgba(19,21,26,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:100;flex-shrink:0}
+.nav-logo{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none}
+.nav-logo-mark{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.nav-logo-mark img,.login-logo-mark img{width:112%;height:112%;object-fit:contain;opacity:0;transition:opacity .9s ease;display:block;-webkit-mask-image:radial-gradient(circle at center, #000 62%, transparent 78%);mask-image:radial-gradient(circle at center, #000 62%, transparent 78%)}
+.nav-logo-mark img.loaded,.login-logo-mark img.loaded{opacity:1}
+.nav-logo-name{font-weight:600;font-size:.95rem;letter-spacing:-.01em;color:var(--text)}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-link{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--r-sm);font-size:.82rem;font-weight:500;color:var(--text-3);cursor:pointer;transition:all .15s;border:none;background:transparent;text-decoration:none}
+.nav-link:hover{color:var(--text-2);background:var(--bg-2)}
+.nav-link.active{color:var(--text);background:var(--bg-2);font-weight:600;box-shadow:inset 0 0 0 1px var(--border-2)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-user{font-size:.8rem;color:var(--text-2);padding:4px 10px;background:var(--bg-2);border:1px solid var(--border);border-radius:99px}
+.ws-switcher{font-family:'Geist',sans-serif;font-size:.78rem;font-weight:500;color:var(--text);background:var(--bg-2);border:1px solid var(--border-2);border-radius:99px;padding:5px 10px;cursor:pointer;outline:none;max-width:170px;transition:border-color .15s}
+.ws-switcher:hover{border-color:rgba(79,142,247,.4)}
+.ws-switcher:focus{border-color:rgba(79,142,247,.55)}
+
+/* ── Legal modal ── */
+.legal-modal{max-width:640px;max-height:85vh;display:flex;flex-direction:column}
+.legal-tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.legal-tab{padding:8px 12px;border:none;background:none;color:var(--text-3);font-family:'Geist',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+.legal-tab:hover{color:var(--text-2)}
+.legal-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.legal-body{overflow-y:auto;padding-right:8px;flex:1}
+.legal-section{display:none}
+.legal-section.active{display:block}
+.legal-body h3{font-size:1rem;font-weight:600;color:var(--text);margin:18px 0 8px}
+.legal-body h3:first-child{margin-top:0}
+.legal-body h4{font-size:.85rem;font-weight:600;color:var(--text-2);margin:14px 0 6px}
+.legal-body p{font-size:.83rem;line-height:1.6;color:var(--text-2);margin-bottom:10px}
+.legal-body ul{margin:0 0 12px 20px}
+.legal-body li{font-size:.83rem;line-height:1.6;color:var(--text-2);margin-bottom:4px}
+.legal-updated{font-size:.72rem;color:var(--text-3);margin-bottom:14px;font-style:italic}
+
+/* ── Page ── */
+.page{flex:1;max-width:1000px;margin:0 auto;padding:36px 24px;width:100%}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 17px;border-radius:var(--r-sm);font-family:'Geist',sans-serif;font-size:.83rem;font-weight:600;letter-spacing:-.01em;cursor:pointer;transition:all .15s;border:none;white-space:nowrap;text-decoration:none}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.btn-primary:hover{background:#3b7ef4}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-ghost{background:var(--bg-2);color:var(--text-2);border:1px solid var(--border-2)}
+.btn-ghost:hover{background:var(--bg-3);color:var(--text);border-color:rgba(255,255,255,.25)}
+.btn-danger{background:var(--red-dim);color:var(--red);border:1px solid rgba(240,82,82,.25)}
+.btn-danger:hover{background:rgba(240,82,82,.22)}
+.btn-icon{width:34px;height:34px;padding:0;justify-content:center}
+
+/* ── Login ── */
+.login-left{flex:1;display:flex;flex-direction:column;justify-content:center;padding:60px 56px;border-right:1px solid var(--border);min-width:0}
+.login-right{flex:1;display:flex;flex-direction:column;justify-content:center;padding:60px 56px;background:var(--bg-1);position:relative;overflow:hidden;min-width:0}
+.login-right::before{content:'';position:absolute;width:480px;height:480px;background:radial-gradient(circle,rgba(79,142,247,.14) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:48px}
+.login-logo-mark{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.login-logo-name{font-weight:700;font-size:1.1rem;letter-spacing:-.02em;color:var(--text)}
+.login-headline{font-family:'Instrument Serif',Georgia,serif;font-size:2.2rem;line-height:1.2;letter-spacing:-.02em;color:var(--text);margin-bottom:10px}
+.login-sub{font-size:.875rem;color:var(--text-2);margin-bottom:36px;line-height:1.6}
+.login-form{display:flex;flex-direction:column;gap:14px}
+.login-divider{display:flex;align-items:center;gap:10px}
+.login-divider span{font-size:.72rem;color:var(--text-3)}
+.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.login-hint{font-size:.72rem;color:var(--text-3);margin-top:14px;text-align:center}
+.trust-header{margin-bottom:32px;position:relative;z-index:1}
+.trust-header-eyebrow{font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:10px}
+.trust-header-title{font-family:'Instrument Serif',Georgia,serif;font-size:1.6rem;line-height:1.25;letter-spacing:-.01em;color:var(--text)}
+.trust-list{display:flex;flex-direction:column;gap:16px;position:relative;z-index:1}
+.trust-item{display:flex;align-items:flex-start;gap:12px}
+.trust-icon{width:38px;height:38px;flex-shrink:0;background:linear-gradient(150deg,rgba(79,142,247,.16),rgba(79,142,247,.04));border:1px solid rgba(79,142,247,.22);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--blue);margin-top:1px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 2px 8px rgba(0,0,0,.18);position:relative;overflow:hidden}
+.trust-icon::after{content:'';position:absolute;inset:0;background:linear-gradient(150deg,rgba(255,255,255,.10),transparent 55%);pointer-events:none}
+.trust-icon svg{position:relative;z-index:1}
+/* Natural draw-in: each path traces itself, then a soft settle */
+.trust-icon svg path,.trust-icon svg circle,.trust-icon svg rect{stroke-dasharray:var(--len,80);stroke-dashoffset:var(--len,80);animation:trace 1.1s cubic-bezier(.65,0,.35,1) forwards}
+.trust-item:nth-child(1) .trust-icon svg *{animation-delay:.15s}
+.trust-item:nth-child(2) .trust-icon svg *{animation-delay:.35s}
+.trust-item:nth-child(3) .trust-icon svg *{animation-delay:.55s}
+.trust-icon{animation:iconRise .7s ease both}
+.trust-item:nth-child(1) .trust-icon{animation-delay:.05s}
+.trust-item:nth-child(2) .trust-icon{animation-delay:.25s}
+.trust-item:nth-child(3) .trust-icon{animation-delay:.45s}
+@keyframes trace{to{stroke-dashoffset:0}}
+@keyframes iconRise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion: reduce){
+  .trust-icon svg path,.trust-icon svg circle,.trust-icon svg rect{animation:none;stroke-dashoffset:0}
+  .trust-icon{animation:none}
+}
+.trust-title{font-weight:500;font-size:.875rem;color:var(--text);margin-bottom:2px}
+.trust-desc{font-size:.78rem;color:var(--text-3);line-height:1.5}
+
+/* ── Form fields ── */
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3)}
+.field input,.notes-ta{padding:9px 12px;background:var(--bg-2);border:1px solid var(--border-2);border-radius:var(--r-sm);font-family:'Geist',sans-serif;font-size:.875rem;color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s}
+.field input::placeholder,.notes-ta::placeholder{color:var(--text-3)}
+.field input:focus,.notes-ta:focus{border-color:rgba(79,142,247,.55);box-shadow:0 0 0 3px rgba(79,142,247,.12)}
+.notes-ta{width:100%;min-height:110px;resize:vertical;line-height:1.6}
+.form-error{font-size:.78rem;color:var(--red);margin-top:4px;display:none}
+.form-success{font-size:.78rem;color:var(--green);margin-top:4px;display:none;line-height:1.5}
+.link-btn{background:none;border:none;color:var(--blue);font-family:'Geist',sans-serif;font-size:.78rem;cursor:pointer;padding:0;text-align:left;transition:color .15s}
+.link-btn:hover{color:#7aa9f9;text-decoration:underline}
+.forgot-row{display:flex;justify-content:flex-end;margin-top:-4px}
+
+/* ── Page header ── */
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.page-hdr-left{display:flex;align-items:center;gap:12px}
+.back-btn{width:34px;height:34px;border-radius:var(--r-sm);background:var(--bg-2);border:1px solid var(--border-2);color:var(--text-2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.back-btn:hover{background:var(--bg-3);color:var(--text)}
+.page-title{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:2rem;letter-spacing:-.01em;color:var(--text);line-height:1.1}
+.page-subtitle{font-size:.78rem;color:var(--text-3);margin-top:5px;letter-spacing:.01em}
+
+/* ── Proof banner ── */
+.proof-banner{background:var(--bg-1);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:var(--r-sm);padding:16px 20px;display:flex;align-items:center;gap:14px;margin-bottom:28px}
+.proof-banner-icon{color:var(--blue);flex-shrink:0}
+.proof-banner-text{font-size:.83rem;color:var(--text-2);line-height:1.5}
+.proof-banner-text strong{color:var(--text);font-weight:600}
+
+/* ── Section heading ── */
+.section-hdr{display:flex;align-items:center;gap:10px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-2);margin-bottom:16px}
+.section-hdr::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── Stats bar ── */
+.stats-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.stat-pill{display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg-1);border:1px solid var(--border);border-radius:var(--r-sm);font-size:.78rem;color:var(--text-2)}
+.stat-pill strong{color:var(--text);font-weight:600}
+
+/* ── Project grid ── */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.proj-card{background:var(--bg-1);border:1px solid var(--border);border-radius:var(--r);padding:22px;cursor:pointer;transition:border-color .15s,background .15s;position:relative;overflow:hidden}
+.proj-card>*{position:relative;z-index:1}
+.proj-card:hover{border-color:var(--border-2);background:var(--bg-2)}
+.proj-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.proj-icon-wrap{width:40px;height:40px;background:var(--bg-2);border:1px solid var(--border-2);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;color:var(--text-2)}
+.proj-del-btn{position:relative;z-index:2;width:28px;height:28px;border-radius:6px;background:transparent;border:1px solid transparent;color:var(--text-3);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:all .15s}
+.proj-del-btn svg{pointer-events:none}
+.proj-card:hover .proj-del-btn{opacity:1}
+.proj-del-btn:hover{background:var(--red-dim);color:var(--red);border-color:rgba(240,82,82,.25)}
+.proj-name{font-weight:600;font-size:1.02rem;letter-spacing:-.01em;color:var(--text);margin-bottom:4px}
+.proj-meta{font-size:.75rem;color:var(--text-3)}
+.proj-footer{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.proj-stat{display:flex;align-items:center;gap:5px;font-size:.75rem;color:var(--text-3)}
+
+/* ── Badges ── */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:.72rem;font-weight:500;background:var(--bg-2);border:1px solid var(--border);color:var(--text-3)}
+.badge.green{background:rgba(37,99,235,.16);border-color:rgba(37,99,235,.45);color:#6ea2f5}
+.badge.red{background:rgba(124,58,237,.16);border-color:rgba(124,58,237,.45);color:#a98af0}
+.badge.violet{background:var(--violet-dim);border-color:rgba(167,139,250,.3);color:var(--violet)}
+
+/* ── Upload zone ── */
+.upload-zone{border:1.5px dashed var(--border-2);border-radius:var(--r);padding:28px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:24px}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:var(--blue-dim)}
+.upload-zone-icon{color:var(--text-3);margin-bottom:8px;transition:color .2s}
+.upload-zone:hover .upload-zone-icon,.upload-zone.drag .upload-zone-icon{color:var(--blue)}
+.upload-zone-title{font-size:.875rem;font-weight:500;color:var(--text-2);margin-bottom:3px}
+.upload-zone-sub{font-size:.75rem;color:var(--text-3)}
+
+/* ── Photo grid ── */
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.photo-card{background:var(--bg-1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.photo-card:hover{border-color:var(--border-2);box-shadow:var(--shadow)}
+.photo-thumb{position:relative;aspect-ratio:1;background:var(--bg-2);overflow:hidden}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}
+.photo-card:hover .photo-thumb img{transform:scale(1.04)}
+.photo-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55) 0%,transparent 50%);opacity:0;transition:opacity .2s;pointer-events:none}
+.photo-card:hover .photo-overlay{opacity:1}
+.photo-actions{position:absolute;top:7px;right:7px;display:flex;flex-direction:column;gap:5px;opacity:0;transition:opacity .15s}
+.photo-card:hover .photo-actions{opacity:1}
+.photo-action-btn{width:28px;height:28px;border-radius:6px;background:rgba(13,15,20,.78);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;text-decoration:none}
+.photo-action-btn.dl:hover{background:var(--blue);border-color:var(--blue)}
+.photo-action-btn.del:hover{background:var(--red);border-color:var(--red)}
+.photo-tag-strip{position:absolute;bottom:7px;left:7px;display:flex;gap:4px}
+.photo-tag-pill{padding:2px 8px;border-radius:99px;font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;border:1px solid transparent;transition:all .15s;backdrop-filter:blur(8px)}
+.photo-tag-pill.before{background:rgba(124,58,237,.12);border-color:rgba(124,58,237,.45);color:#a98af0}
+.photo-tag-pill.before:hover{background:rgba(124,58,237,.22);color:#c4abf7}
+.photo-tag-pill.before.active{background:#7c3aed;border-color:#7c3aed;color:#fff;box-shadow:0 2px 8px rgba(124,58,237,.4)}
+.photo-tag-pill.after{background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.45);color:#6ea2f5}
+.photo-tag-pill.after:hover{background:rgba(37,99,235,.22);color:#93bdf8}
+.photo-tag-pill.after.active{background:#2563eb;border-color:#2563eb;color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.4)}
+.photo-meta{padding:8px 10px 10px;border-top:1px solid var(--border)}
+.photo-label-row{display:flex;align-items:center;gap:4px}
+.photo-label-display{flex:1;font-size:.78rem;font-weight:500;color:var(--text-2);padding:3px 5px;border-radius:5px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.photo-label-display:hover{background:var(--bg-3)}
+.photo-notes-btn{width:24px;height:24px;border-radius:5px;border:none;background:transparent;color:var(--text-3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s;flex-shrink:0}
+.photo-notes-btn:hover{background:var(--bg-3);color:var(--text-2)}
+.photo-notes-btn.active{color:var(--blue)}
+.photo-date{font-size:.68rem;color:var(--text-3);margin-top:4px;padding-left:5px}
+
+/* ── Empty state ── */
+.empty-state{grid-column:1/-1;padding:64px 20px;text-align:center}
+.empty-icon{color:var(--text-3);margin-bottom:14px}
+.empty-title{font-weight:600;font-size:1rem;letter-spacing:-.01em;color:var(--text-2);margin-bottom:6px}
+.empty-sub{font-size:.83rem;color:var(--text-3)}
+
+/* ── Modal ── */
+.backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;z-index:200;padding:20px;animation:fadeIn .15s ease}
+.backdrop.open{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--bg-1);border:1px solid var(--border-2);border-radius:14px;box-shadow:var(--shadow-lg);padding:28px;width:100%;max-width:440px;animation:slideUp .18s ease}
+.modal.wide{max-width:520px}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.modal-title{font-weight:600;font-size:1.05rem;letter-spacing:-.01em;margin-bottom:18px;color:var(--text)}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+.modal-photo-preview{display:flex;gap:14px;margin-bottom:20px;align-items:center}
+.modal-photo-preview img{width:72px;height:72px;object-fit:cover;border-radius:10px;border:1px solid var(--border-2);flex-shrink:0}
+.modal-photo-info .modal-photo-name{font-weight:500;font-size:.9rem;color:var(--text);margin-bottom:2px}
+.modal-photo-info .modal-photo-date{font-size:.75rem;color:var(--text-3)}
+.notes-fields{display:flex;flex-direction:column;gap:12px}
+.notes-label-inp{width:100%;padding:9px 12px;background:var(--bg-2);border:1px solid var(--border-2);border-radius:var(--r-sm);font-family:'Geist',sans-serif;font-size:.875rem;color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s}
+.notes-label-inp::placeholder{color:var(--text-3)}
+.notes-label-inp:focus{border-color:rgba(79,142,247,.55);box-shadow:0 0 0 3px rgba(79,142,247,.12)}
+
+/* ── Timeline ── */
+.tl-summary-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:32px}
+.tl-summary-card{background:var(--bg-1);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px}
+.tl-summary-label{font-size:.7rem;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--text-3);margin-bottom:6px}
+.tl-summary-value{font-size:1.55rem;font-weight:700;letter-spacing:-.03em;color:var(--text);line-height:1}
+.tl-summary-sub{font-size:.72rem;color:var(--text-3);margin-top:4px}
+.tl-project{margin-bottom:36px}
+.tl-project-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px}
+.tl-project-name{font-family:'Instrument Serif',Georgia,serif;font-size:1.15rem;letter-spacing:-.01em;color:var(--text);cursor:pointer}
+.tl-project-name:hover{color:var(--blue)}
+.tl-project-meta{font-size:.75rem;color:var(--text-3);margin-top:2px}
+.tl-project-tags{display:flex;gap:6px;flex-wrap:wrap}
+.tl-ba-section{margin-bottom:20px}
+.tl-ba-label{display:flex;align-items:center;gap:8px;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.tl-ba-label.before-label{color:#a98af0}
+.tl-ba-label.after-label{color:#6ea2f5}
+.tl-ba-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.tl-photo-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.tl-photo-item{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--bg-2);border:1px solid var(--border);cursor:pointer;transition:transform .15s,border-color .15s}
+.tl-photo-item:hover{transform:scale(1.02);border-color:var(--border-2)}
+.tl-photo-item img{width:100%;height:100%;object-fit:cover;display:block}
+.tl-photo-label{position:absolute;bottom:0;left:0;right:0;padding:18px 7px 7px;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,transparent 100%);font-size:.67rem;color:rgba(255,255,255,.9);font-weight:500;line-height:1.3}
+.tl-photo-tag{position:absolute;top:6px;left:6px;padding:2px 7px;border-radius:5px;font-size:.6rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.tl-photo-tag.before{background:rgba(124,58,237,.92);color:#fff;font-weight:700}
+.tl-photo-tag.after{background:rgba(37,99,235,.92);color:#fff;font-weight:700}
+.tl-untagged-section{margin-top:16px}
+.tl-untagged-label{font-size:.7rem;color:var(--text-3);font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.tl-empty{text-align:center;padding:80px 20px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.tl-empty-icon{color:var(--text-3)}
+.tl-empty-title{font-family:'Instrument Serif',Georgia,serif;font-size:1.4rem;color:var(--text-2)}
+.tl-empty-sub{font-size:.875rem;color:var(--text-3);max-width:360px;line-height:1.6}
+
+/* ── Crew ── */
+.crew-list{display:flex;flex-direction:column;gap:8px;margin-bottom:28px}
+.crew-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:var(--bg-1);border:1px solid var(--border);border-radius:var(--r)}
+.crew-info{display:flex;align-items:center;gap:12px;min-width:0}
+.crew-avatar{width:38px;height:38px;border-radius:50%;background:var(--blue-dim);border:1px solid rgba(79,142,247,.25);display:flex;align-items:center;justify-content:center;color:var(--blue);font-weight:600;font-size:.9rem;flex-shrink:0;text-transform:uppercase}
+.crew-avatar.owner{background:var(--green-dim);border-color:rgba(34,211,122,.25);color:var(--green)}
+.crew-name{font-weight:500;font-size:.9rem;color:var(--text)}
+.crew-email{font-size:.75rem;color:var(--text-3)}
+.crew-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.crew-jobcount{font-size:.72rem;color:var(--text-3)}
+.invite-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:24px}
+.invite-row .field{flex:1;min-width:200px}
+.pending-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg-2);border:1px dashed var(--border-2);border-radius:99px;font-size:.78rem;color:var(--text-2)}
+.pending-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.pending-cancel{background:none;border:none;color:var(--text-3);cursor:pointer;padding:0;display:flex;align-items:center}
+.pending-cancel:hover{color:var(--red)}
+
+/* Assigned crew on a job */
+.assigned-section{background:var(--bg-1);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:24px}
+.assigned-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.assigned-title{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);display:flex;align-items:center;gap:7px}
+.assigned-chips{display:flex;flex-wrap:wrap;gap:7px}
+.crew-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;background:var(--blue-dim);border:1px solid rgba(79,142,247,.25);border-radius:99px;font-size:.78rem;color:var(--text)}
+.crew-chip .x{background:none;border:none;color:var(--text-3);cursor:pointer;padding:0;display:flex}
+.crew-chip .x:hover{color:var(--red)}
+.assign-select{padding:7px 10px;background:var(--bg-2);border:1px solid var(--border-2);border-radius:var(--r-sm);font-family:'Geist',sans-serif;font-size:.8rem;color:var(--text);outline:none;cursor:pointer}
+
+/* Activity feed */
+.feed{display:flex;flex-direction:column;gap:2px}
+.feed-item{display:flex;gap:12px;padding:14px 4px;border-bottom:1px solid var(--border)}
+.feed-icon{width:34px;height:34px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.feed-icon.photo{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(79,142,247,.2)}
+.feed-icon.note{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.feed-body{flex:1;min-width:0}
+.feed-text{font-size:.85rem;color:var(--text);line-height:1.45}
+.feed-text strong{font-weight:600}
+.feed-meta{font-size:.72rem;color:var(--text-3);margin-top:2px}
+
+/* ── Invite banner ── */
+.invite-banner{background:var(--bg-1);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--r-sm);padding:16px 20px;display:flex;align-items:center;gap:14px;margin-bottom:24px;flex-wrap:wrap}
+.invite-banner-icon{width:38px;height:38px;border-radius:9px;background:var(--green-dim);border:1px solid rgba(34,211,122,.3);display:flex;align-items:center;justify-content:center;color:var(--green);flex-shrink:0}
+.invite-banner-text{flex:1;min-width:180px;font-size:.85rem;color:var(--text-2);line-height:1.5}
+.invite-banner-text strong{color:var(--text);font-weight:600}
+.invite-banner-actions{display:flex;gap:8px;flex-shrink:0}
+.btn-success{background:var(--green);color:#06281a;font-weight:600;box-shadow:0 0 0 1px rgba(34,211,122,.5),0 2px 8px rgba(34,211,122,.25)}
+.btn-success:hover{background:#1cc06f}
+
+/* ── Pricing ── */
+.pricing-head{text-align:center;max-width:560px;margin:0 auto 36px}
+.pricing-head h2{font-family:'Instrument Serif',Georgia,serif;font-size:2rem;letter-spacing:-.02em;color:var(--text);margin-bottom:8px}
+.pricing-head p{font-size:.9rem;color:var(--text-2);line-height:1.6}
+.plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;max-width:760px;margin:0 auto}
+.plan-card{background:var(--bg-1);border:1px solid var(--border);border-radius:14px;padding:26px;display:flex;flex-direction:column;position:relative}
+.plan-card.featured{border-color:rgba(79,142,247,.5);box-shadow:0 0 0 1px rgba(79,142,247,.25),0 8px 40px rgba(79,142,247,.10)}
+.plan-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:4px 12px;border-radius:99px}
+.plan-name{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:10px}
+.plan-price{display:flex;align-items:baseline;gap:4px;margin-bottom:6px}
+.plan-price .amt{font-size:2.4rem;font-weight:700;letter-spacing:-.03em;color:var(--text)}
+.plan-price .per{font-size:.85rem;color:var(--text-3)}
+.plan-tag{font-size:.8rem;color:var(--text-2);margin-bottom:20px;min-height:20px}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin:0 0 24px;flex:1}
+.plan-features li{display:flex;align-items:flex-start;gap:9px;font-size:.83rem;color:var(--text-2);line-height:1.45}
+.plan-features li svg{flex-shrink:0;margin-top:2px}
+.plan-features li.muted{color:var(--text-3)}
+.plan-features li .check{color:var(--green)}
+.plan-features li .dash{color:var(--text-3)}
+.plan-cta{width:100%;justify-content:center;padding:11px}
+.plan-current{text-align:center;font-size:.8rem;color:var(--text-3);padding:11px;border:1px dashed var(--border-2);border-radius:var(--r-sm)}
+
+/* ── Billing ── */
+.billing-card{background:var(--bg-1);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;max-width:620px;margin-bottom:18px}
+.billing-row{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.billing-plan-name{font-size:1.15rem;font-weight:600;color:var(--text);display:flex;align-items:center;gap:10px}
+.plan-pill{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 10px;border-radius:99px}
+.plan-pill.pro{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(79,142,247,.3)}
+.plan-pill.free{background:var(--bg-2);color:var(--text-3);border:1px solid var(--border)}
+.plan-pill.warn{background:var(--red-dim);color:var(--red);border:1px solid rgba(240,82,82,.3)}
+.billing-sub{font-size:.82rem;color:var(--text-3);margin-top:4px}
+.billing-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.usage-bar{height:7px;background:var(--bg-3);border-radius:99px;overflow:hidden;margin-top:6px}
+.usage-fill{height:100%;background:var(--blue);border-radius:99px;transition:width .4s}
+.usage-fill.full{background:var(--red)}
+.usage-row{margin-top:14px}
+.usage-label{display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-2);margin-bottom:2px}
+
+/* ── Upgrade modal ── */
+.upgrade-hero{text-align:center;margin-bottom:18px}
+.upgrade-hero .badge-pro{display:inline-block;background:var(--blue-dim);color:var(--blue);border:1px solid rgba(79,142,247,.3);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:4px 12px;border-radius:99px;margin-bottom:12px}
+.upgrade-hero h3{font-family:'Instrument Serif',Georgia,serif;font-size:1.5rem;color:var(--text);margin-bottom:8px}
+.upgrade-hero p{font-size:.85rem;color:var(--text-2);line-height:1.55}
+.upgrade-price{text-align:center;margin:14px 0 18px}
+.upgrade-price .amt{font-size:2rem;font-weight:700;color:var(--text)}
+.upgrade-price .per{font-size:.85rem;color:var(--text-3)}
+
+/* ── Lightbox ── */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;align-items:center;justify-content:center;padding:20px}
+.lightbox.open{display:flex}
+.lightbox-inner{position:relative;max-width:90vw;max-height:90vh}
+.lightbox-inner img{max-width:100%;max-height:90vh;border-radius:10px;display:block;box-shadow:var(--shadow-lg)}
+.lightbox-close{position:absolute;top:-12px;right:-12px;width:32px;height:32px;border-radius:50%;background:var(--bg-3);border:1px solid var(--border-2);color:var(--text-2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.lightbox-close:hover{background:var(--red);color:#fff}
+.lightbox-label{font-weight:500;font-size:.9rem;color:var(--text);margin-top:12px;text-align:center}
+.lightbox-date{font-size:.75rem;color:var(--text-3);text-align:center;margin-top:3px}
+
+@media(max-width:700px){
+  #screen-login{flex-direction:column}
+  .login-right{display:none}
+  .login-left{padding:40px 24px;border-right:none;border-bottom:1px solid var(--border)}
+  .login-headline{font-size:1.8rem}
+  .page{padding:24px 16px}
+  .photo-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+  .tl-photo-row{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
+  .nav-links .nav-link span{display:none}
+}
+
+/* ── Intro: drop down from the top and fade into place ── */
+@keyframes dropIn{
+  from{opacity:0;transform:translateY(-26px)}
+  to{opacity:1;transform:translateY(0)}
+}
+#screen-login.intro .login-logo,
+#screen-login.intro .login-headline,
+#screen-login.intro .login-sub,
+#screen-login.intro .login-form,
+#screen-login.intro .trust-header,
+#screen-login.intro .trust-item{
+  opacity:0;
+  animation:dropIn .7s cubic-bezier(.22,.61,.36,1) forwards;
+}
+#screen-login.intro .login-logo    {animation-delay:.05s}
+#screen-login.intro .login-headline{animation-delay:.15s}
+#screen-login.intro .login-sub     {animation-delay:.25s}
+#screen-login.intro .login-form    {animation-delay:.35s}
+#screen-login.intro .trust-header  {animation-delay:.30s}
+#screen-login.intro .trust-item:nth-child(1){animation-delay:.45s}
+#screen-login.intro .trust-item:nth-child(2){animation-delay:.55s}
+#screen-login.intro .trust-item:nth-child(3){animation-delay:.65s}
+@media (prefers-reduced-motion: reduce){
+  #screen-login.intro .login-logo,
+  #screen-login.intro .login-headline,
+  #screen-login.intro .login-sub,
+  #screen-login.intro .login-form,
+  #screen-login.intro .trust-header,
+  #screen-login.intro .trust-item{opacity:1;animation:none}
+}
+</style>
+</head>
+<body>
+
+<!-- screens below -->
+
+<!-- ══════════ LOGIN ══════════ -->
+<div id="screen-login" class="screen">
+  <div class="login-left">
+    <div class="login-logo">
+      <div class="login-logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <span class="login-logo-name">JobShield</span>
+    </div>
+    <div class="login-headline">Document Every Job.<br>Defend Every Dollar.</div>
+    <div class="login-sub">Protect your business with documented jobsite records. Sign in to access your project evidence vault.</div>
+    <div class="login-form">
+      <div class="field"><label>Email</label><input id="login-email" type="email" placeholder="you@example.com"/></div>
+      <div class="field"><label>Password</label><input id="login-password" type="password" placeholder="Enter your password"/></div>
+      <div class="forgot-row" style="justify-content:space-between;align-items:center;">
+        <label style="display:flex;align-items:center;gap:7px;font-size:.78rem;color:var(--text-2);cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;">
+          <input type="checkbox" id="remember-me" style="width:15px;height:15px;accent-color:var(--blue);cursor:pointer;"/> Keep me signed in
+        </label>
+        <button type="button" class="link-btn" id="forgot-password-link">Forgot password?</button>
+      </div>
+      <div class="form-error" id="login-error"></div>
+      <button class="btn btn-primary" id="login-btn" style="width:100%;justify-content:center;padding:10px;">Sign In to JobShield</button>
+      <div class="login-divider"><span>or</span></div>
+      <button class="btn btn-ghost" id="create-account-btn" style="width:100%;justify-content:center;padding:10px;">Create an Account</button>
+    </div>
+  </div>
+  <div class="login-right">
+    <div class="trust-header">
+      <div class="trust-header-eyebrow">Built for Contractors</div>
+      <div class="trust-header-title">Settle disputes<br>with confidence.</div>
+    </div>
+    <div class="trust-list">
+      <div class="trust-item">
+        <div class="trust-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l7 2.6v5.4c0 4.6-3 8.4-7 10-4-1.6-7-5.4-7-10V5.1z"/><path d="M9 11.8l2.1 2.1L15 9.9"/></svg></div>
+        <div><div class="trust-title">Dispute-ready documentation</div><div class="trust-desc">Never lose evidence of completed work. Every upload is timestamped and organized by project.</div></div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.2"/><path d="M7.5 10.5V7.5a4.5 4.5 0 0 1 9 0v3"/><path d="M12 14.2v3"/></svg></div>
+        <div><div class="trust-title">Your records, always safe</div><div class="trust-desc">Secure, persistent storage for all your jobsite photos and notes — ready when you need them most.</div></div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13.5 3.5V9H19"/><path d="M8.5 14.5l2 2 3.5-3.8"/></svg></div>
+        <div><div class="trust-title">When questions arise, photos speak</div><div class="trust-desc">Before-and-after records, labeled photos, and detailed notes give you the full picture.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ RESET PASSWORD ══════════ -->
+<div id="screen-reset" class="screen">
+  <div class="login-left" style="border-right:none;margin:0 auto;max-width:440px;">
+    <div class="login-logo">
+      <div class="login-logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <span class="login-logo-name">JobShield</span>
+    </div>
+    <div class="login-headline">Set a new<br>password.</div>
+    <div class="login-sub">Choose a new password for your account. You'll be signed in and returned to the app once it's saved.</div>
+    <div class="login-form">
+      <div class="field"><label>New Password</label><input id="reset-password" type="password" placeholder="At least 6 characters"/></div>
+      <div class="field"><label>Confirm New Password</label><input id="reset-confirm" type="password" placeholder="Repeat your new password"/></div>
+      <div class="form-error" id="reset-error"></div>
+      <div class="form-success" id="reset-success"></div>
+      <button class="btn btn-primary" id="reset-btn" style="width:100%;justify-content:center;padding:10px;">Update Password</button>
+      <div class="login-divider"><span>or</span></div>
+      <button class="btn btn-ghost" id="reset-back-btn" style="width:100%;justify-content:center;padding:10px;">Back to Sign In</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PROJECTS ══════════ -->
+<div id="screen-projects" class="screen">
+  <nav>
+    <div class="nav-logo" onclick="goToProjects()"><div class="nav-logo-mark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><span class="nav-logo-name">JobShield</span></div>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="goToProjects()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span>Projects</span></button>
+      <button class="nav-link" onclick="goToTimeline()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-8"/></svg><span>Timeline</span></button>
+      <button class="nav-link" onclick="goToActivity()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span>Activity</span></button>
+      <button class="nav-link crew-nav-link" onclick="goToCrew()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Crew</span></button>
+    </div>
+    <div class="nav-right"><select class="ws-switcher" onchange="switchWorkspace(this.value)"></select><span class="nav-user" id="nav-user-projects"></span><button class="btn btn-ghost btn-icon" id="logout-btn" title="Log out"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button></div>
+  </nav>
+  <div class="page">
+    <div id="invite-banner-slot"></div>
+    <div class="page-hdr">
+      <div><div class="page-title">Projects</div><div class="page-subtitle" id="projects-subtitle"></div></div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn btn-ghost" id="plan-btn" onclick="goToBilling()"></button>
+        <button class="btn btn-primary" id="new-project-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg> New Project</button>
+      </div>
+    </div>
+    <div id="proof-banner-projects" class="proof-banner" style="display:none;">
+      <div class="proof-banner-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="proof-banner-text"><strong>Never lose evidence of completed work.</strong> Your documented records are ready to settle disputes, verify scope, and protect your business.</div>
+    </div>
+    <div class="section-hdr"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Active Projects</div>
+    <div class="proj-grid" id="proj-grid"></div>
+  </div>
+</div>
+
+<!-- ══════════ PROJECT DETAIL ══════════ -->
+<div id="screen-project" class="screen">
+  <nav>
+    <div class="nav-logo" onclick="goToProjects()"><div class="nav-logo-mark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><span class="nav-logo-name">JobShield</span></div>
+    <div class="nav-links">
+      <button class="nav-link" onclick="goToProjects()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span>Projects</span></button>
+      <button class="nav-link" onclick="goToTimeline()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-8"/></svg><span>Timeline</span></button>
+      <button class="nav-link" onclick="goToActivity()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span>Activity</span></button>
+      <button class="nav-link crew-nav-link" onclick="goToCrew()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Crew</span></button>
+    </div>
+    <div class="nav-right"><select class="ws-switcher" onchange="switchWorkspace(this.value)"></select><span class="nav-user" id="nav-user-project"></span><button class="btn btn-ghost btn-icon" onclick="logout()" title="Log out"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button></div>
+  </nav>
+  <div class="page">
+    <div class="page-hdr">
+      <div class="page-hdr-left">
+        <button class="back-btn" onclick="goToProjects()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg></button>
+        <div><div class="page-title" id="project-title"></div><div class="page-subtitle" id="project-subtitle"></div></div>
+      </div>
+      <button class="btn btn-primary" id="upload-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg> Upload Photos</button>
+      <input type="file" id="file-input" multiple accept="image/*" style="display:none;"/>
+    </div>
+    <div class="proof-banner">
+      <div class="proof-banner-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="proof-banner-text"><strong>Protect your business with documented jobsite records.</strong> Tag photos as Before or After, add labels and notes to build an airtight record of every job.</div>
+    </div>
+    <div id="assigned-crew-section" class="assigned-section" style="display:none;">
+      <div class="assigned-head">
+        <div class="assigned-title"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Assigned Crew</div>
+        <div id="assign-control"></div>
+      </div>
+      <div class="assigned-chips" id="assigned-chips"></div>
+    </div>
+    <div class="upload-zone" id="upload-zone">
+      <div class="upload-zone-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+      <div class="upload-zone-title">Drop photos here or click to browse</div>
+      <div class="upload-zone-sub">JPG, PNG, HEIC — each photo timestamped automatically</div>
+    </div>
+    <div id="stats-bar" class="stats-bar" style="display:none;"></div>
+    <div id="photos-section" style="display:none;">
+      <div class="section-hdr"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3z"/><path d="M14 3h7v7h-7z"/><path d="M14 14h7v7h-7z"/><path d="M3 14h7v7H3z"/></svg> Project Photos</div>
+      <div class="photo-grid" id="photo-grid"></div>
+    </div>
+    <div id="photos-empty" class="empty-state" style="display:none;">
+      <div class="empty-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+      <div class="empty-title">No photos yet</div>
+      <div class="empty-sub">Upload your first photo to start building your project record.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ TIMELINE ══════════ -->
+<div id="screen-timeline" class="screen">
+  <nav>
+    <div class="nav-logo" onclick="goToProjects()"><div class="nav-logo-mark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><span class="nav-logo-name">JobShield</span></div>
+    <div class="nav-links">
+      <button class="nav-link" onclick="goToProjects()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span>Projects</span></button>
+      <button class="nav-link active" onclick="goToTimeline()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-8"/></svg><span>Timeline</span></button>
+      <button class="nav-link" onclick="goToActivity()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span>Activity</span></button>
+      <button class="nav-link crew-nav-link" onclick="goToCrew()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Crew</span></button>
+    </div>
+    <div class="nav-right"><select class="ws-switcher" onchange="switchWorkspace(this.value)"></select><span class="nav-user" id="nav-user-timeline"></span><button class="btn btn-ghost btn-icon" onclick="logout()" title="Log out"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button></div>
+  </nav>
+  <div class="page">
+    <div class="page-hdr"><div><div class="page-title">Timeline</div><div class="page-subtitle">A visual overview of every project and photo</div></div></div>
+    <div id="tl-summary-bar" class="tl-summary-bar"></div>
+    <div id="tl-content"></div>
+  </div>
+</div>
+
+<!-- ══════════ CREW MANAGEMENT ══════════ -->
+<div id="screen-crew" class="screen">
+  <nav>
+    <div class="nav-logo" onclick="goToProjects()"><div class="nav-logo-mark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><span class="nav-logo-name">JobShield</span></div>
+    <div class="nav-links">
+      <button class="nav-link" onclick="goToProjects()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span>Projects</span></button>
+      <button class="nav-link" onclick="goToTimeline()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-8"/></svg><span>Timeline</span></button>
+      <button class="nav-link" onclick="goToActivity()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span>Activity</span></button>
+      <button class="nav-link active crew-nav-link" onclick="goToCrew()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Crew</span></button>
+    </div>
+    <div class="nav-right"><select class="ws-switcher" onchange="switchWorkspace(this.value)"></select><span class="nav-user" id="nav-user-crew"></span><button class="btn btn-ghost btn-icon" onclick="logout()" title="Log out"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button></div>
+  </nav>
+  <div class="page">
+    <div class="page-hdr"><div><div class="page-title">Crew Management</div><div class="page-subtitle">Invite crew, assign them to jobs, and manage access</div></div></div>
+
+    <div class="section-hdr"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Invite a Crew Member</div>
+    <div class="invite-row">
+      <div class="field"><label>Email address</label><input id="invite-email" type="email" placeholder="crew.member@example.com"/></div>
+      <button class="btn btn-primary" id="invite-btn">Send Invite</button>
+    </div>
+    <div class="form-error" id="invite-error"></div>
+    <div class="form-success" id="invite-success"></div>
+    <div id="pending-section" style="display:none;">
+      <div class="section-hdr">Pending Invites</div>
+      <div class="pending-list" id="pending-list"></div>
+    </div>
+
+    <div class="section-hdr"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Crew Members</div>
+    <div class="crew-list" id="crew-list"></div>
+  </div>
+</div>
+
+<!-- ══════════ ACTIVITY FEED ══════════ -->
+<div id="screen-activity" class="screen">
+  <nav>
+    <div class="nav-logo" onclick="goToProjects()"><div class="nav-logo-mark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><span class="nav-logo-name">JobShield</span></div>
+    <div class="nav-links">
+      <button class="nav-link" onclick="goToProjects()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span>Projects</span></button>
+      <button class="nav-link" onclick="goToTimeline()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-8"/></svg><span>Timeline</span></button>
+      <button class="nav-link active" onclick="goToActivity()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span>Activity</span></button>
+      <button class="nav-link crew-nav-link" onclick="goToCrew()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Crew</span></button>
+    </div>
+    <div class="nav-right"><select class="ws-switcher" onchange="switchWorkspace(this.value)"></select><span class="nav-user" id="nav-user-activity"></span><button class="btn btn-ghost btn-icon" onclick="logout()" title="Log out"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button></div>
+  </nav>
+  <div class="page">
+    <div class="page-hdr"><div><div class="page-title">Activity Feed</div><div class="page-subtitle">Recent photo uploads and notes across your workspace</div></div></div>
+    <div id="feed-content"></div>
+  </div>
+</div>
+
+<!-- ══════════ PRICING ══════════ -->
+<div id="screen-pricing" class="screen">
+  <nav>
+    <div class="nav-logo" onclick="goToProjects()"><div class="nav-logo-mark"></div><span class="nav-logo-name">JobShield</span></div>
+    <div class="nav-links">
+      <button class="nav-link" onclick="goToProjects()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span>Projects</span></button>
+    </div>
+    <div class="nav-right"><span class="nav-user" id="nav-user-pricing"></span><button class="btn btn-ghost btn-icon" onclick="logout()" title="Log out"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button></div>
+  </nav>
+  <div class="page">
+    <div class="page-hdr"><div class="page-hdr-left"><button class="back-btn" onclick="goToProjects()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg></button></div></div>
+    <div class="pricing-head">
+      <h2>Simple, honest pricing</h2>
+      <p>Start free. Upgrade when your business needs unlimited projects, your crew, and dispute-ready documentation tools.</p>
+    </div>
+    <div class="plan-grid">
+      <!-- FREE -->
+      <div class="plan-card">
+        <div class="plan-name">Free</div>
+        <div class="plan-price"><span class="amt">$0</span><span class="per">/month</span></div>
+        <div class="plan-tag">Everything you need to get started.</div>
+        <ul class="plan-features">
+          <li><span>Up to 3 active projects</span></li>
+          <li><span>Up to 250 photos total</span></li>
+          <li><span>Basic project timelines</span></li>
+          <li><span>Basic photo notes</span></li>
+          <li class="muted"><span>Single user only</span></li>
+          <li class="muted"><span>JobShield branding visible</span></li>
+        </ul>
+        <div id="free-cta-slot"></div>
+      </div>
+      <!-- PRO -->
+      <div class="plan-card featured">
+        <div class="plan-badge">Most Popular</div>
+        <div class="plan-name" style="color:var(--blue)">Pro</div>
+        <div class="plan-price"><span class="amt">$33</span><span class="per">/month</span></div>
+        <div class="plan-tag">For growing contractors and crews.</div>
+        <ul class="plan-features" id="pro-feature-list"></ul>
+        <div id="pro-cta-slot"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ BILLING ══════════ -->
+<div id="screen-billing" class="screen">
+  <nav>
+    <div class="nav-logo" onclick="goToProjects()"><div class="nav-logo-mark"></div><span class="nav-logo-name">JobShield</span></div>
+    <div class="nav-links">
+      <button class="nav-link" onclick="goToProjects()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span>Projects</span></button>
+    </div>
+    <div class="nav-right"><span class="nav-user" id="nav-user-billing"></span><button class="btn btn-ghost btn-icon" onclick="logout()" title="Log out"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button></div>
+  </nav>
+  <div class="page">
+    <div class="page-hdr"><div class="page-hdr-left"><button class="back-btn" onclick="goToProjects()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg></button><div><div class="page-title">Billing</div><div class="page-subtitle">Manage your plan and payment details</div></div></div></div>
+    <div id="billing-content"></div>
+  </div>
+</div>
+
+<!-- ══════════ MODALS ══════════ -->
+<!-- Upgrade to Pro -->
+<div class="backdrop" id="modal-upgrade">
+  <div class="modal">
+    <div class="upgrade-hero">
+      <span class="badge-pro">JobShield Pro</span>
+      <h3>Unlock the full toolkit</h3>
+      <p id="upgrade-reason">Upgrade to Pro for unlimited projects and photos, crew collaboration, and dispute-ready documentation.</p>
+    </div>
+    <div class="upgrade-price"><span class="amt">$33</span><span class="per">/month</span></div>
+    <ul class="plan-features" style="margin-bottom:22px;">
+      <li><span>Unlimited projects &amp; photos</span></li>
+      <li><span>Crew collaboration &amp; team members</span></li>
+      <li><span>Advanced timelines &amp; activity logs</span></li>
+      <li><span>Evidence / dispute documentation tools</span></li>
+      <li><span>Priority support</span></li>
+    </ul>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="upgrade-later">Maybe later</button>
+      <button class="btn btn-primary" id="upgrade-now">Upgrade to Pro</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create Account legal: Terms / Privacy / Liability -->
+<div class="backdrop" id="modal-legal">
+  <div class="modal legal-modal">
+    <div class="modal-title">Legal</div>
+    <div class="legal-tabs">
+      <button class="legal-tab active" data-legal-tab="tos">Terms of Service</button>
+      <button class="legal-tab" data-legal-tab="privacy">Privacy Policy</button>
+      <button class="legal-tab" data-legal-tab="liability">Limitation of Liability</button>
+    </div>
+    <div class="legal-body">
+      <!-- TERMS OF SERVICE -->
+      <div class="legal-section active" id="legal-tos">
+        <div class="legal-updated">JobShield Terms of Service — Last Updated: 6/2/2026</div>
+        <h3>1. Acceptance of Terms</h3>
+        <p>Welcome to JobShield. By accessing or using JobShield ("Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the Service. The Service is operated by JobShield ("Company," "we," "us," or "our").</p>
+        <h3>2. Description of Service</h3>
+        <p>JobShield provides a platform that allows users to:</p>
+        <ul>
+          <li>Upload and organize project photos</li>
+          <li>Document job progress</li>
+          <li>Maintain project records</li>
+          <li>Collaborate with authorized team members</li>
+          <li>Store project-related notes and documentation</li>
+        </ul>
+        <p>JobShield is a documentation and record-management platform. JobShield does not provide legal, engineering, architectural, construction, accounting, or professional advice.</p>
+        <h3>3. User Accounts</h3>
+        <p>You must provide accurate information when creating an account. You are responsible for:</p>
+        <ul>
+          <li>Maintaining account security</li>
+          <li>Protecting your password</li>
+          <li>Activities occurring under your account</li>
+        </ul>
+        <p>You must immediately notify us of any unauthorized use of your account.</p>
+        <h3>4. User Content</h3>
+        <p>Users retain ownership of content they upload to JobShield. By uploading content, you grant JobShield a non-exclusive, worldwide license to store, process, display, transmit, and back up the content solely for operating and improving the Service.</p>
+        <p>You represent that:</p>
+        <ul>
+          <li>You own or have permission to upload the content.</li>
+          <li>The content does not violate any law or third-party rights.</li>
+          <li>The content does not infringe copyrights, trademarks, or privacy rights.</li>
+        </ul>
+        <h3>5. Prohibited Uses</h3>
+        <p>You may not:</p>
+        <ul>
+          <li>Upload unlawful content</li>
+          <li>Upload malicious software</li>
+          <li>Attempt unauthorized access to systems</li>
+          <li>Interfere with platform operation</li>
+          <li>Use the Service for fraudulent purposes</li>
+          <li>Violate applicable laws</li>
+        </ul>
+        <p>We may suspend or terminate accounts that violate these Terms.</p>
+        <h3>6. Subscription and Billing</h3>
+        <p>Certain features may require a paid subscription. By purchasing a subscription, you authorize recurring billing until canceled. Subscription fees are non-refundable except where required by law. Users may cancel subscriptions at any time through their account settings.</p>
+        <h3>7. Data Storage and Availability</h3>
+        <p>We strive to maintain reliable service availability but do not guarantee uninterrupted access. Users are responsible for maintaining independent backups of critical records and documentation.</p>
+        <h3>8. Intellectual Property</h3>
+        <p>The Service, software, branding, logos, designs, and related intellectual property are owned by JobShield and protected by applicable laws. Users may not copy, reverse engineer, or redistribute the Service without written permission.</p>
+        <h3>9. Termination</h3>
+        <p>We may suspend or terminate access for violations of these Terms or for any reason permitted by law. Upon termination, access to stored content may be restricted or removed according to our retention policies.</p>
+        <h3>10. Disclaimer of Warranties</h3>
+        <p>The Service is provided "AS IS" and "AS AVAILABLE." To the fullest extent permitted by law, JobShield disclaims all warranties, including:</p>
+        <ul>
+          <li>Merchantability</li>
+          <li>Fitness for a particular purpose</li>
+          <li>Non-infringement</li>
+          <li>Continuous availability</li>
+          <li>Accuracy of user-generated content</li>
+        </ul>
+        <h3>11. Limitation of Liability</h3>
+        <p>See the Limitation of Liability tab.</p>
+        <h3>12. Governing Law</h3>
+        <p>These Terms shall be governed by the laws of the State of Iowa, without regard to conflict-of-law principles.</p>
+      </div>
+
+      <!-- PRIVACY POLICY -->
+      <div class="legal-section" id="legal-privacy">
+        <div class="legal-updated">JobShield Privacy Policy — Last Updated: 6/2/2026</div>
+        <h3>Information We Collect</h3>
+        <h4>Information You Provide</h4>
+        <ul>
+          <li>Name</li>
+          <li>Email address</li>
+          <li>Company name</li>
+          <li>Account information</li>
+          <li>Photos</li>
+          <li>Notes</li>
+          <li>Project documentation</li>
+          <li>Customer information voluntarily entered by users</li>
+        </ul>
+        <h4>Information Automatically Collected</h4>
+        <ul>
+          <li>IP address</li>
+          <li>Browser information</li>
+          <li>Device information</li>
+          <li>Usage analytics</li>
+          <li>Login activity</li>
+        </ul>
+        <h3>How We Use Information</h3>
+        <p>We use information to:</p>
+        <ul>
+          <li>Operate the Service</li>
+          <li>Authenticate users</li>
+          <li>Store and organize project documentation</li>
+          <li>Provide customer support</li>
+          <li>Improve functionality</li>
+          <li>Process payments</li>
+          <li>Protect platform security</li>
+        </ul>
+        <h3>Information Sharing</h3>
+        <p>We do not sell personal information. We may share information with:</p>
+        <ul>
+          <li>Cloud hosting providers</li>
+          <li>Payment processors</li>
+          <li>Authentication providers</li>
+          <li>Service providers necessary to operate JobShield</li>
+          <li>Law enforcement when legally required</li>
+        </ul>
+        <h3>Data Security</h3>
+        <p>We use commercially reasonable safeguards to protect data. However, no method of electronic transmission or storage is completely secure.</p>
+        <h3>Data Retention</h3>
+        <p>We retain information for as long as necessary to provide services, comply with legal obligations, resolve disputes, and enforce agreements.</p>
+        <h3>User Rights</h3>
+        <p>Users may request:</p>
+        <ul>
+          <li>Access to their data</li>
+          <li>Correction of inaccurate information</li>
+          <li>Deletion of account information</li>
+          <li>Export of stored content where available</li>
+        </ul>
+        <p>Requests may be submitted to: support@jobshield.com</p>
+        <h3>Changes to This Policy</h3>
+        <p>We may update this Privacy Policy periodically. Continued use of the Service constitutes acceptance of revised policies.</p>
+      </div>
+
+      <!-- LIMITATION OF LIABILITY -->
+      <div class="legal-section" id="legal-liability">
+        <div class="legal-updated">Limitation of Liability Clause</div>
+        <h3>Limitation of Liability</h3>
+        <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW: JOBSHIELD, ITS OWNERS, OFFICERS, EMPLOYEES, CONTRACTORS, AFFILIATES, AND SERVICE PROVIDERS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO:</p>
+        <ul>
+          <li>LOSS OF PROFITS</li>
+          <li>LOSS OF BUSINESS OPPORTUNITIES</li>
+          <li>LOSS OF DATA</li>
+          <li>LOSS OF GOODWILL</li>
+          <li>PROJECT DELAYS</li>
+          <li>CONTRACT DISPUTES</li>
+          <li>CUSTOMER DISPUTES</li>
+          <li>LEGAL CLAIMS ARISING FROM USER CONTENT</li>
+        </ul>
+        <p>JOBSHIELD DOES NOT GUARANTEE THAT PHOTOS, RECORDS, OR DOCUMENTATION STORED THROUGH THE SERVICE WILL BE ADMISSIBLE IN COURT, SUFFICIENT TO RESOLVE DISPUTES, OR ACCEPTED AS EVIDENCE BY ANY THIRD PARTY.</p>
+        <p>JOBSHIELD'S TOTAL LIABILITY FOR ANY CLAIM ARISING OUT OF OR RELATED TO THE SERVICE SHALL NOT EXCEED THE GREATER OF: (A) THE AMOUNT PAID BY THE USER TO JOBSHIELD DURING THE TWELVE (12) MONTHS PRECEDING THE CLAIM; OR (B) ONE HUNDRED U.S. DOLLARS ($100).</p>
+        <p>USERS ACKNOWLEDGE THAT THEY ARE RESPONSIBLE FOR MAINTAINING INDEPENDENT COPIES OF CRITICAL PROJECT RECORDS AND DOCUMENTATION.</p>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="close-legal">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Forgot Password -->
+<div class="backdrop" id="modal-forgot-password">
+  <div class="modal">
+    <div class="modal-title">Reset your password</div>
+    <p style="font-size:.83rem;color:var(--text-2);line-height:1.6;margin-bottom:16px;">Enter your account email and we'll send you a link to set a new password.</p>
+    <div class="field"><label>Email</label><input id="forgot-email" type="email" placeholder="you@example.com"/></div>
+    <div class="form-error" id="forgot-error"></div>
+    <div class="form-success" id="forgot-success"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="cancel-forgot">Cancel</button>
+      <button class="btn btn-primary" id="confirm-forgot">Send Reset Link</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create Account -->
+<div class="backdrop" id="modal-create-account">
+  <div class="modal">
+    <div class="modal-title">Create your account</div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="field"><label>Full Name</label><input id="signup-name" type="text" placeholder="Your full name"/></div>
+      <div class="field"><label>Email</label><input id="signup-email" type="email" placeholder="you@example.com"/></div>
+      <div class="field"><label>Password</label><input id="signup-password" type="password" placeholder="At least 6 characters"/></div>
+      <div class="field"><label>Confirm Password</label><input id="signup-confirm" type="password" placeholder="Repeat your password"/></div>
+      <label style="display:flex;align-items:flex-start;gap:9px;font-size:.8rem;color:var(--text-2);cursor:pointer;line-height:1.5;margin-top:2px;">
+        <input type="checkbox" id="signup-agree" style="width:16px;height:16px;margin-top:1px;accent-color:var(--blue);cursor:pointer;flex-shrink:0;"/>
+        <span>I agree to the <button type="button" class="link-btn" id="open-legal-tos" style="font-size:.8rem;">Terms of Service</button>, <button type="button" class="link-btn" id="open-legal-privacy" style="font-size:.8rem;">Privacy Policy</button>, and <button type="button" class="link-btn" id="open-legal-liability" style="font-size:.8rem;">Limitation of Liability</button>.</span>
+      </label>
+    </div>
+    <div class="form-error" id="signup-error"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="cancel-create-account">Cancel</button>
+      <button class="btn btn-primary" id="confirm-create-account">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Project -->
+<div class="backdrop" id="modal-new-project">
+  <div class="modal wide">
+    <div class="modal-title">New Project</div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="field"><label>Project Name</label><input id="new-project-input" type="text" placeholder="e.g. 123 Main St — Kitchen Remodel"/></div>
+      <div class="field"><label>Customer Name</label><input id="new-project-customer" type="text" placeholder="e.g. John Smith" maxlength="120"/></div>
+      <div style="display:flex;gap:14px;">
+        <div class="field" style="flex:1;min-width:0;"><label>Contract Price</label><input id="new-project-contract" type="number" min="0" step="0.01" placeholder="$0.00" style="width:100%;"/></div>
+        <div class="field" style="flex:1;min-width:0;"><label>Total Job Cost</label><input id="new-project-cost" type="number" min="0" step="0.01" placeholder="$0.00" style="width:100%;"/></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="cancel-new-project">Cancel</button>
+      <button class="btn btn-primary" id="confirm-new-project">Create Project</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Project -->
+<div class="backdrop" id="modal-delete-project">
+  <div class="modal">
+    <div class="modal-title">Delete Project?</div>
+    <p id="delete-project-msg" style="font-size:.875rem;color:var(--text-2);line-height:1.6;"></p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="cancel-delete-project">Cancel</button>
+      <button class="btn btn-danger" id="confirm-delete-project">Delete Project</button>
+    </div>
+  </div>
+</div>
+
+<!-- Photo Details (label + notes) -->
+<div class="backdrop" id="modal-notes">
+  <div class="modal wide">
+    <div class="modal-title">Photo Details</div>
+    <div class="modal-photo-preview" id="notes-photo-preview"></div>
+    <div class="notes-fields">
+      <div class="field"><label>Label</label><input class="notes-label-inp" id="notes-label-inp" type="text" placeholder="e.g. North wall damage, bathroom tile, roof flashing…" maxlength="80"/></div>
+      <div class="field"><label>Notes</label><textarea class="notes-ta" id="notes-textarea" placeholder="Document observations, measurements, damage, conditions, follow-up actions…"></textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="cancel-notes">Cancel</button>
+      <button class="btn btn-primary" id="save-notes">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" id="lightbox-close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    <img id="lightbox-img" src="" alt=""/>
+    <div class="lightbox-label" id="lightbox-label"></div>
+    <div class="lightbox-date" id="lightbox-date"></div>
+  </div>
+</div>
+
+<script>
+// ─── Supabase config (raw REST — no client library, no hangs) ──────────────────
+// ─── Brand logo (embedded, self-contained) ────────────────────────────────────
+const JOBSHIELD_LOGO = 'data:image/png;base64,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';
+// Inject the logo into every logo mark with a soft fade-in.
+function injectLogos(){
+  document.querySelectorAll('.login-logo-mark, .nav-logo-mark').forEach(mark => {
+    if (mark.querySelector('img')) return;            // already done
+    mark.innerHTML = '';                               // remove placeholder SVG
+    const img = document.createElement('img');
+    img.alt = 'JobShield';
+    img.decoding = 'async';
+    img.onload = () => requestAnimationFrame(() => img.classList.add('loaded'));
+    img.src = JOBSHIELD_LOGO;
+    mark.appendChild(img);
+  });
+}
+
+// Give each trust-icon stroke its exact length so the draw-in animation is smooth.
+function primeTrustIcons(){
+  document.querySelectorAll('.trust-icon svg').forEach(svg => {
+    svg.querySelectorAll('path, circle, rect').forEach(el => {
+      try {
+        const len = Math.ceil(el.getTotalLength ? el.getTotalLength() : 80);
+        el.style.setProperty('--len', len);
+        el.style.strokeDasharray = len;
+        el.style.strokeDashoffset = len;
+      } catch(e){ /* getTotalLength unsupported for this element; leave default */ }
+    });
+  });
+}
+const SB_URL = 'https://izinbhmqhkoookvastyp.supabase.co';
+const SB_KEY = 'sb_publishable_B_EFWLWG6necibs4zft4Zg_sLIpG_gQ';
+let accessToken  = null;   // current session JWT
+let refreshToken = null;
+
+// Token storage. If "remember me" is on, persist across browser restarts
+// (localStorage). Otherwise keep only for the current tab session
+// (sessionStorage), so closing the browser logs you out.
+let rememberMe = false;
+function tokenStore(){ return rememberMe ? window.localStorage : window.sessionStorage; }
+function saveTokens(at, rt){
+  accessToken = at || null; refreshToken = rt || null;
+  try {
+    // Always clear both stores first to avoid stale copies
+    [window.localStorage, window.sessionStorage].forEach(s => { s.removeItem('jv-at'); s.removeItem('jv-rt'); });
+    if (at){ const s = tokenStore(); s.setItem('jv-at', at); if (rt) s.setItem('jv-rt', rt); s.setItem('jv-remember', rememberMe ? '1':'0'); }
+  } catch {}
+}
+function loadTokens(){
+  try {
+    // Prefer a persisted ("remember me") session; fall back to this tab's session.
+    let at = window.localStorage.getItem('jv-at');
+    let rt = window.localStorage.getItem('jv-rt');
+    if (at){ rememberMe = true; }
+    else { at = window.sessionStorage.getItem('jv-at'); rt = window.sessionStorage.getItem('jv-rt'); rememberMe = false; }
+    accessToken = at; refreshToken = rt;
+  } catch {}
+}
+
+// Core fetch wrapper with a hard timeout so nothing can hang forever
+async function sbFetch(path, { method='GET', body=null, auth=true, prefer=null, timeout=15000 } = {}){
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), timeout);
+  const headers = { 'apikey': SB_KEY, 'Content-Type': 'application/json' };
+  if (auth && accessToken) headers['Authorization'] = 'Bearer ' + accessToken;
+  if (prefer) headers['Prefer'] = prefer;
+  let resp;
+  try {
+    resp = await fetch(SB_URL + path, { method, headers, body: body?JSON.stringify(body):undefined, signal: controller.signal });
+  } catch (e) {
+    clearTimeout(t);
+    if (e.name === 'AbortError') throw new Error('TIMEOUT: Supabase did not respond in time. This is almost always a CORS / Site URL setting — your site address must be added in Supabase → Authentication → URL Configuration.');
+    throw new Error('NETWORK: ' + (e.message||e));
+  }
+  clearTimeout(t);
+  const text = await resp.text();
+  let json = null; try { json = text ? JSON.parse(text) : null; } catch { json = text; }
+  if (!resp.ok) {
+    const m = (json && (json.msg || json.message || json.error_description || json.error)) || text || ('HTTP ' + resp.status);
+    const err = new Error(m); err.status = resp.status; err.body = json; throw err;
+  }
+  return json;
+}
+
+// ─── Auth via REST ─────────────────────────────────────────────────────────────
+async function authSignIn(email, password){
+  const data = await sbFetch('/auth/v1/token?grant_type=password', { method:'POST', auth:false, body:{ email, password } });
+  saveTokens(data.access_token, data.refresh_token);
+  return data.user;
+}
+async function authSignUp(email, password){
+  const data = await sbFetch('/auth/v1/signup', { method:'POST', auth:false, body:{ email, password } });
+  if (data.access_token) saveTokens(data.access_token, data.refresh_token);
+  return data;
+}
+async function authGetUser(){
+  if (!accessToken) return null;
+  try { return await sbFetch('/auth/v1/user', {}); }
+  catch (e) {
+    // Token expired — try a refresh
+    if (refreshToken) {
+      try {
+        const data = await sbFetch('/auth/v1/token?grant_type=refresh_token', { method:'POST', auth:false, body:{ refresh_token: refreshToken } });
+        saveTokens(data.access_token, data.refresh_token);
+        return data.user;
+      } catch { saveTokens(null,null); return null; }
+    }
+    saveTokens(null,null); return null;
+  }
+}
+async function authSignOut(){
+  try { if (accessToken) await sbFetch('/auth/v1/logout', { method:'POST', timeout:5000 }); } catch {}
+  saveTokens(null, null);
+}
+
+// Send the password-reset email. redirectTo must be an allowed URL in Supabase.
+async function authRecover(email, redirectTo){
+  const q = redirectTo ? ('?redirect_to=' + encodeURIComponent(redirectTo)) : '';
+  await sbFetch('/auth/v1/recover' + q, { method:'POST', auth:false, body:{ email } });
+}
+
+// Update the current (recovery-authenticated) user's password.
+async function authUpdatePassword(newPassword){
+  const data = await sbFetch('/auth/v1/user', { method:'PUT', body:{ password: newPassword } });
+  return data;
+}
+
+// ─── REST data helpers ─────────────────────────────────────────────────────────
+const rest = {
+  select: (table, query='') => sbFetch('/rest/v1/' + table + (query?('?'+query):''), {}),
+  insert: (table, row) => sbFetch('/rest/v1/' + table, { method:'POST', body: row, prefer:'return=representation' }),
+  update: (table, query, patch) => sbFetch('/rest/v1/' + table + '?' + query, { method:'PATCH', body: patch, prefer:'return=representation' }),
+  remove: (table, query) => sbFetch('/rest/v1/' + table + '?' + query, { method:'DELETE' }),
+  // Like remove, but asks Supabase to return the deleted rows so we can confirm it worked
+  removeReturning: (table, query) => sbFetch('/rest/v1/' + table + '?' + query, { method:'DELETE', prefer:'return=representation' }),
+  // Call a Postgres function (RPC)
+  rpc: (fn, args={}) => sbFetch('/rest/v1/rpc/' + fn, { method:'POST', body: args }),
+};
+
+// ─── App state ────────────────────────────────────────────────────────────────
+let currentUser     = null;
+let currentProfile  = null;
+let projects        = [];       // [{id, name, created_at, updated_at, photos:[]}]
+let currentProjectId = null;
+let pendingDeleteId  = null;
+let pendingNotesId   = null;
+let sessionLoaded    = false;
+// Multi-workspace collaboration
+let myWorkspaces     = [];      // [{owner_id, owner_name, role}] — all workspaces I belong to
+let activeWorkspace  = null;    // owner_id of the workspace I'm currently viewing
+let workspaceOwnerId = null;    // alias of activeWorkspace (the workspace being shown)
+let myRole           = 'owner'; // my role IN the active workspace
+let crewMembers      = [];      // members of the active workspace
+let crewInvites      = [];      // pending invites for the active workspace (owner only)
+let assignments      = [];      // job assignments visible to me
+let activityFeed     = [];      // activity in the active workspace
+let pendingInvite    = null;    // {owner_id, owner_name} if I have a pending invite
+// I'm an owner of the ACTIVE workspace if that workspace's owner_id is me.
+const isOwner = () => activeWorkspace === currentUser?.id;
+// Subscription / plan
+let mySubscription = null;      // {plan, status, current_period_end, ...}
+const FREE_LIMITS = { projects: 3, photos: 250 };
+// True when the signed-in user has an active Pro plan.
+function isProUser(){
+  if (!mySubscription) return false;
+  if (mySubscription.plan !== 'pro') return false;
+  if (!['active','trialing'].includes(mySubscription.status)) return false;
+  if (mySubscription.current_period_end && new Date(mySubscription.current_period_end) < new Date()) return false;
+  return true;
+}
+// Total photos across MY OWN workspace (used for the free 250-photo cap).
+function myTotalPhotos(){ return projects.reduce((a,p)=>a+(p.photos?p.photos.length:0),0); }
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+const fmt     = d => new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+const money   = n => (n===null||n===undefined||n==='') ? null : '$' + Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const nowISO  = () => new Date().toISOString();
+const $       = id => document.getElementById(id);
+const escHtml = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+// ─── Debug logger (console only) ──────────────────────────────────────────────
+function dbg(msg){ console.log('[JobShield] ' + msg); }
+const currentProject = () => projects.find(p => p.id === currentProjectId) || null;
+
+function svgIcon(paths, size=15){
+  const arr = Array.isArray(paths)?paths:[paths];
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${arr.map(d=>`<path d="${d}"/>`).join('')}</svg>`;
+}
+const IC = {
+  folder:   ['M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z'],
+  trash:    ['M3 6h18','M8 6V4h8v2','M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6'],
+  image:    ['M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z','M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z','M21 15l-5-5L5 21'],
+  clock:    ['M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z','M12 6v6l4 2'],
+  check:    ['M20 6L9 17l-5-5'],
+  notes:    ['M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z','M14 2v6h6','M16 13H8','M16 17H8','M10 9H8'],
+  download: ['M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4','M7 10l5 5 5-5','M12 15V3'],
+  camera:   ['M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z','M12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'],
+};
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $(id).classList.add('active');
+}
+function openModal(id)  { $(id).classList.add('open'); }
+function closeModal(id) { $(id).classList.remove('open'); }
+function showErr(id, msg){ const el=$(id); el.textContent=msg; el.style.display=msg?'block':'none'; }
+
+// ─── Auth ─────────────────────────────────────────────────────────────────────
+async function login(){
+  const email    = $('login-email').value.trim();
+  const password = $('login-password').value;
+  showErr('login-error','');
+  if (!email||!password){ showErr('login-error','Please fill in all fields.'); return; }
+  rememberMe = !!($('remember-me') && $('remember-me').checked);
+  const btn = $('login-btn');
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  try {
+    const user = await authSignIn(email, password);
+    currentUser = user;
+    sessionLoaded = true;
+    await enterApp();
+  } catch (err) {
+    const m = String(err.message||err);
+    let msg = m;
+    if (m.includes('Invalid login') || m.includes('invalid_grant') || m.toLowerCase().includes('credentials')) msg = 'Incorrect email or password.';
+    else if (m.includes('Email not confirmed') || m.includes('not confirmed')) msg = 'Email not confirmed. In Supabase → Authentication → Providers → Email, turn OFF "Confirm email", then try again.';
+    else if (m.startsWith('TIMEOUT')) msg = m.replace('TIMEOUT: ','');
+    else if (m.startsWith('NETWORK')) msg = 'Could not reach Supabase. Check your connection. If this persists, your site URL likely needs to be added in Supabase → Authentication → URL Configuration.';
+    showErr('login-error', msg);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Sign In to JobShield';
+  }
+}
+
+async function signup(){
+  const name     = $('signup-name').value.trim();
+  const email    = $('signup-email').value.trim();
+  const password = $('signup-password').value;
+  const confirm  = $('signup-confirm').value;
+  showErr('signup-error','');
+  if (!name||!email||!password||!confirm){ showErr('signup-error','Please fill in all fields.'); return; }
+  if (password !== confirm){ showErr('signup-error','Passwords do not match.'); return; }
+  if (password.length < 6){ showErr('signup-error','Password must be at least 6 characters.'); return; }
+  if (!$('signup-agree').checked){ showErr('signup-error','Please agree to the Terms of Service, Privacy Policy, and Limitation of Liability to continue.'); return; }
+  const btn = $('confirm-create-account');
+  btn.disabled = true; btn.textContent = 'Creating…';
+  try {
+    const result = await authSignUp(email, password);
+    // If no session came back, email confirmation is on — sign in to get one
+    if (!accessToken) {
+      try { await authSignIn(email, password); }
+      catch {
+        showErr('signup-error', 'Account created! Please sign in to continue.');
+        closeModal('modal-create-account');
+        $('login-email').value = email;
+        return;
+      }
+    }
+    // Save profile (best-effort). Default to owner of their own workspace.
+    const uid = result?.user?.id || result?.id || (await authGetUser())?.id;
+    if (uid) {
+      try { await rest.insert('profiles', { id: uid, full_name: name, username: email.split('@')[0], email: email, owner_id: uid, role: 'owner' }); }
+      catch(e){ /* profile may already exist; ignore */ }
+    }
+    currentUser = await authGetUser();
+    // Note: we no longer auto-join here. enterApp() checks for a pending invite
+    // and presents an Accept/Decline banner so the user chooses.
+    sessionLoaded = true;
+    closeModal('modal-create-account');
+    await enterApp();
+  } catch (err) {
+    const m = String(err.message||err);
+    const msg = (m.includes('rate limit')||m.toLowerCase().includes('email'))
+      ? 'Email signups are rate-limited or require confirmation. In Supabase → Authentication → Providers → Email, turn OFF "Confirm email", then try again.'
+      : m.startsWith('TIMEOUT') ? m.replace('TIMEOUT: ','')
+      : m;
+    showErr('signup-error', msg);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Create Account';
+  }
+}
+
+async function logout(){
+  await authSignOut();
+  currentUser = null; currentProfile = null;
+  projects = []; currentProjectId = null;
+  sessionLoaded = false;
+  showScreen('screen-login');
+}
+
+// ─── Forgot Password ───────────────────────────────────────────────────────────
+// Build the redirect URL that Supabase sends the user back to. We point it at the
+// current page so it works on GitHub Pages regardless of the repo path. The hash
+// fragment (#type=recovery&access_token=...) is parsed on load to open the reset screen.
+function resetRedirectUrl(){
+  // Strip any existing hash/query so Supabase appends cleanly
+  return window.location.origin + window.location.pathname;
+}
+
+async function sendResetEmail(){
+  const email = $('forgot-email').value.trim();
+  showErr('forgot-error',''); $('forgot-success').style.display='none';
+  if (!email){ showErr('forgot-error','Please enter your email address.'); return; }
+  const btn = $('confirm-forgot');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  dbg('Sending password reset email to ' + email);
+  try {
+    await authRecover(email, resetRedirectUrl());
+    dbg('Reset email request accepted.');
+    const ok = $('forgot-success');
+    ok.textContent = 'If an account exists for ' + email + ', a password reset link is on its way. Check your inbox (and spam folder).';
+    ok.style.display = 'block';
+    $('forgot-email').value = '';
+  } catch (err) {
+    const m = String(err.message||err);
+    dbg('Reset email error: ' + m);
+    let msg = m;
+    if (m.startsWith('TIMEOUT')) msg = m.replace('TIMEOUT: ','');
+    else if (m.toLowerCase().includes('rate')) msg = 'Too many requests. Please wait a minute and try again.';
+    showErr('forgot-error', msg);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Send Reset Link';
+  }
+}
+
+// ─── Reset Password ──────────────────────────────────────────────────────────────
+// When the user clicks the email link, Supabase redirects back with a recovery
+// session in the URL hash. We detect it, store the token, and show the reset screen.
+function checkForRecoveryToken(){
+  const hash = window.location.hash || '';
+  if (!hash || hash.indexOf('access_token') === -1) return false;
+  const params = new URLSearchParams(hash.replace(/^#/, ''));
+  const type = params.get('type');
+  const at   = params.get('access_token');
+  const rt   = params.get('refresh_token');
+  if (at && (type === 'recovery' || params.get('access_token'))) {
+    dbg('Recovery token detected in URL.');
+    saveTokens(at, rt);          // this token authorizes the password update
+    // Clean the sensitive token out of the address bar
+    history.replaceState(null, '', window.location.origin + window.location.pathname);
+    showScreen('screen-reset');
+    return true;
+  }
+  return false;
+}
+
+async function submitNewPassword(){
+  const pw   = $('reset-password').value;
+  const conf = $('reset-confirm').value;
+  showErr('reset-error',''); $('reset-success').style.display='none';
+  if (!pw || !conf){ showErr('reset-error','Please fill in both password fields.'); return; }
+  if (pw !== conf){ showErr('reset-error','Passwords do not match.'); return; }
+  if (pw.length < 6){ showErr('reset-error','Password must be at least 6 characters.'); return; }
+  if (!accessToken){ showErr('reset-error','Your reset link has expired or is invalid. Please request a new one from the sign-in page.'); return; }
+  const btn = $('reset-btn');
+  btn.disabled = true; btn.textContent = 'Updating…';
+  dbg('Submitting new password.');
+  try {
+    await authUpdatePassword(pw);
+    dbg('Password updated successfully.');
+    const ok = $('reset-success');
+    ok.textContent = 'Password updated successfully! Redirecting you to sign in…';
+    ok.style.display = 'block';
+    // Clear the recovery session so they log in fresh with the new password
+    await authSignOut();
+    $('reset-password').value = ''; $('reset-confirm').value = '';
+    setTimeout(() => { showScreen('screen-login'); }, 2200);
+  } catch (err) {
+    const m = String(err.message||err);
+    dbg('Password update error: ' + m);
+    let msg = m;
+    if (m.startsWith('TIMEOUT')) msg = m.replace('TIMEOUT: ','');
+    else if (m.includes('same') || m.includes('different from the old')) msg = 'Your new password must be different from your old one.';
+    else if (m.toLowerCase().includes('expired') || m.toLowerCase().includes('invalid')) msg = 'Your reset link has expired. Please request a new one from the sign-in page.';
+    showErr('reset-error', msg);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Update Password';
+  }
+}
+
+// Shared "go into the app" routine
+async function enterApp(){
+  showScreen('screen-projects');
+  try { await loadProfile(); } catch(e){ dbg('loadProfile: '+(e.message||e)); }
+  try { await loadSubscription(); } catch(e){ dbg('loadSubscription: '+(e.message||e)); }
+  try { await loadWorkspaces(); } catch(e){ dbg('loadWorkspaces: '+(e.message||e)); }
+  try { await checkPendingInvite(); } catch(e){ dbg('checkPendingInvite: '+(e.message||e)); }
+  try { await loadCrewData(); } catch(e){ dbg('loadCrewData: '+(e.message||e)); }
+  try { await loadProjects(); } catch(e){ dbg('loadProjects: '+(e.message||e)); }
+  applyRoleVisibility();
+  renderWorkspaceSwitcher();
+  renderInviteBanner();
+  renderProjects();
+}
+
+// Load (or lazily create) the current user's subscription row.
+async function loadSubscription(){
+  if (!currentUser) return;
+  let rows = [];
+  try { rows = await rest.select('subscriptions', 'user_id=eq.' + currentUser.id + '&select=*'); }
+  catch(e){ dbg('subscription select: '+(e.message||e)); }
+  mySubscription = (rows && rows[0]) || null;
+  // Create a default free row the first time we see this user.
+  if (!mySubscription) {
+    try {
+      const created = await rest.insert('subscriptions', { user_id: currentUser.id, plan: 'free', status: 'inactive' });
+      mySubscription = Array.isArray(created)?created[0]:created;
+    } catch(e){ dbg('subscription create: '+(e.message||e)); mySubscription = { plan:'free', status:'inactive' }; }
+  }
+}
+
+// Load all workspaces I belong to, and set the active one.
+async function loadWorkspaces(){
+  try {
+    const res = await rest.rpc('my_workspaces');
+    myWorkspaces = Array.isArray(res) ? res : [];
+  } catch(e){ dbg('my_workspaces: '+(e.message||e)); myWorkspaces = []; }
+  // Ensure my own personal workspace is always present.
+  if (!myWorkspaces.some(w=>w.owner_id===currentUser.id)) {
+    myWorkspaces.unshift({ owner_id: currentUser.id, owner_name: displayName(), role: 'owner' });
+  }
+  // Keep the active workspace if still valid, otherwise default to my own.
+  if (!activeWorkspace || !myWorkspaces.some(w=>w.owner_id===activeWorkspace)) {
+    activeWorkspace = currentUser.id;
+  }
+  workspaceOwnerId = activeWorkspace;
+  const w = myWorkspaces.find(x=>x.owner_id===activeWorkspace);
+  myRole = w ? w.role : 'owner';
+}
+
+// Switch to a different workspace and reload everything.
+async function switchWorkspace(ownerId){
+  if (ownerId === activeWorkspace) return;
+  activeWorkspace = ownerId;
+  workspaceOwnerId = ownerId;
+  currentProjectId = null;
+  activityFeed = [];   // clear stale feed; reloaded when Activity is opened
+  const w = myWorkspaces.find(x=>x.owner_id===ownerId);
+  myRole = w ? w.role : 'crew';
+  await loadCrewData();
+  await loadProjects();
+  applyRoleVisibility();
+  renderWorkspaceSwitcher();
+  goToProjects();
+}
+
+// Does the signed-in user have a pending invite to join a workspace?
+async function checkPendingInvite(){
+  pendingInvite = null;
+  try {
+    const res = await rest.rpc('get_my_invite');
+    dbg('get_my_invite raw: ' + JSON.stringify(res));
+    let row = null;
+    if (Array.isArray(res)) row = res[0] || null;
+    else if (res && typeof res === 'object') row = res;
+    if (row && row.owner_id && row.owner_id !== currentUser.id) {
+      pendingInvite = row;
+    }
+  } catch(e){ dbg('get_my_invite error: '+(e.message||e)); }
+}
+
+async function loadProfile(){
+  if (!currentUser) return;
+  let rows = [];
+  try { rows = await rest.select('profiles', 'id=eq.' + currentUser.id + '&select=*'); } catch(e){ dbg('profiles select: '+(e.message||e)); }
+  currentProfile = (rows && rows[0]) || null;
+  if (!currentProfile) {
+    const fallbackName = currentUser.email ? currentUser.email.split('@')[0] : 'User';
+    try {
+      const created = await rest.insert('profiles', { id: currentUser.id, full_name: fallbackName, username: fallbackName, email: currentUser.email });
+      currentProfile = Array.isArray(created)?created[0]:created;
+    } catch(e){ dbg('profile create: '+(e.message||e)); currentProfile = { full_name: fallbackName }; }
+    // Ensure my own owner membership exists.
+    try { await rest.insert('memberships', { member_id: currentUser.id, owner_id: currentUser.id, role: 'owner' }); } catch(e){ dbg('self membership: '+(e.message||e)); }
+  }
+}
+
+function displayName(){
+  return currentProfile?.full_name || currentUser?.email?.split('@')[0] || 'User';
+}
+
+// Name of the workspace currently being viewed
+function activeWorkspaceName(){
+  if (activeWorkspace === currentUser?.id) return 'My Workspace';
+  const w = myWorkspaces.find(x=>x.owner_id===activeWorkspace);
+  return w ? (w.owner_name + "'s Workspace") : 'Workspace';
+}
+
+// Hide owner-only controls when viewing a workspace where I'm only crew
+function applyRoleVisibility(){
+  const owner = isOwner();
+  ['new-project-btn'].forEach(id => { const el=$(id); if(el) el.style.display = owner ? '' : 'none'; });
+  document.querySelectorAll('.crew-nav-link').forEach(el => el.style.display = owner ? '' : 'none');
+}
+
+// Populate every workspace-switcher dropdown in the nav bars.
+function renderWorkspaceSwitcher(){
+  const opts = myWorkspaces.map(w=>{
+    const label = w.owner_id === currentUser.id ? 'My Workspace' : (w.owner_name + "'s Workspace");
+    const sel = w.owner_id === activeWorkspace ? ' selected' : '';
+    return `<option value="${w.owner_id}"${sel}>${escHtml(label)}</option>`;
+  }).join('');
+  document.querySelectorAll('.ws-switcher').forEach(sel=>{
+    sel.innerHTML = opts;
+    sel.value = activeWorkspace;
+    // Hide the switcher entirely if there's only one workspace.
+    sel.style.display = myWorkspaces.length > 1 ? '' : 'none';
+  });
+}
+
+// ─── Crew data (scoped to the active workspace) ────────────────────────────────
+async function loadCrewData(){
+  if (!workspaceOwnerId) return;
+  // Members of the active workspace, via memberships joined to profiles.
+  try {
+    const mems = await rest.select('memberships', 'owner_id=eq.' + workspaceOwnerId + '&select=member_id,role') || [];
+    if (mems.length){
+      const ids = mems.map(m=>m.member_id);
+      const profs = await rest.select('profiles', 'id=in.(' + ids.join(',') + ')&select=id,full_name,email') || [];
+      crewMembers = mems.map(m => {
+        const p = profs.find(x=>x.id===m.member_id) || {};
+        return { id: m.member_id, full_name: p.full_name, email: p.email, role: m.role };
+      });
+    } else { crewMembers = []; }
+  } catch(e){ dbg('crew select: '+(e.message||e)); crewMembers = []; }
+  // Pending invites (owner of this workspace only)
+  if (isOwner()) {
+    try { crewInvites = await rest.select('crew_invites', 'owner_id=eq.' + workspaceOwnerId + '&select=*&order=created_at.desc') || []; }
+    catch(e){ dbg('invites select: '+(e.message||e)); crewInvites = []; }
+  } else { crewInvites = []; }
+  // Job assignments for this workspace
+  try { assignments = await rest.select('job_assignments', 'owner_id=eq.' + workspaceOwnerId + '&select=*') || []; }
+  catch(e){ dbg('assignments select: '+(e.message||e)); assignments = []; }
+}
+
+function crewName(id){
+  const m = crewMembers.find(c=>c.id===id);
+  return m ? (m.full_name || m.email || 'Crew') : 'Crew';
+}
+
+// ─── Projects (scoped to the active workspace) ─────────────────────────────────
+async function loadProjects(){
+  if (!currentUser || !workspaceOwnerId) return;
+  let projs = [];
+  try {
+    if (isOwner()) {
+      // My workspace: all my projects.
+      projs = await rest.select('projects', 'user_id=eq.' + workspaceOwnerId + '&select=*&order=created_at.desc');
+    } else {
+      // Crew in this workspace: only projects in it that I'm assigned to.
+      const myAssigns = assignments.filter(a=>a.crew_id===currentUser.id && a.owner_id===workspaceOwnerId);
+      const pids = myAssigns.map(a=>a.project_id);
+      if (pids.length){
+        projs = await rest.select('projects', 'id=in.(' + pids.join(',') + ')&select=*&order=created_at.desc');
+      } else { projs = []; }
+    }
+  } catch(e){ dbg('projects select: '+(e.message||e)); projects=[]; return; }
+  let photos = [];
+  const pids = (projs||[]).map(p=>p.id);
+  if (pids.length){
+    try { photos = await rest.select('photos', 'project_id=in.(' + pids.join(',') + ')&select=*&order=uploaded_at.desc'); }
+    catch(e){ dbg('photos select: '+(e.message||e)); }
+  }
+  const photoMap = {};
+  (photos||[]).forEach(ph => { (photoMap[ph.project_id] = photoMap[ph.project_id] || []).push(ph); });
+  projects = (projs||[]).map(p => ({ ...p, photos: photoMap[p.id] || [] }));
+}
+
+async function createProject(){
+  const name = $('new-project-input').value.trim();
+  if (!name) return;
+  if (!currentUser) { showErr('login-error','Session expired — please sign in again.'); showScreen('screen-login'); return; }
+  // Free-plan limit: max 3 active projects in your own workspace.
+  if (!isProUser() && projects.length >= FREE_LIMITS.projects) {
+    closeModal('modal-new-project');
+    openUpgrade('You\u2019ve reached the Free plan limit of ' + FREE_LIMITS.projects + ' projects. Upgrade to Pro for unlimited projects.');
+    return;
+  }
+  const contractRaw = $('new-project-contract').value;
+  const costRaw     = $('new-project-cost').value;
+  const customer    = $('new-project-customer').value.trim();
+  const contract_price = contractRaw === '' ? null : parseFloat(contractRaw);
+  const total_job_cost = costRaw === '' ? null : parseFloat(costRaw);
+  const btn = $('confirm-new-project');
+  btn.disabled = true; btn.textContent = 'Creating…';
+  try {
+    const rows = await rest.insert('projects', { name, user_id: currentUser.id, contract_price, total_job_cost, customer_name: customer || null });
+    const data = Array.isArray(rows)?rows[0]:rows;
+    projects.unshift({ ...data, photos: [] });
+    closeModal('modal-new-project');
+    $('new-project-input').value = '';
+    $('new-project-customer').value = '';
+    $('new-project-contract').value = '';
+    $('new-project-cost').value = '';
+    renderProjects();
+  } catch (err) {
+    const m = String(err.message||err);
+    alert('Could not create project: ' + (m.startsWith('TIMEOUT') ? m.replace('TIMEOUT: ','') : m));
+  } finally {
+    btn.disabled = false; btn.textContent = 'Create Project';
+  }
+}
+
+async function deleteProject(){
+  if (!pendingDeleteId) return;
+  const id = pendingDeleteId;
+  const btn = $('confirm-delete-project');
+  btn.disabled = true; btn.textContent = 'Deleting…';
+  dbg('Deleting project ' + id);
+  try {
+    // Delete child photos first (return representation so we can confirm it ran)
+    const delPhotos = await rest.removeReturning('photos', 'project_id=eq.' + id);
+    dbg('Deleted ' + (Array.isArray(delPhotos)?delPhotos.length:'?') + ' photo rows.');
+    // Then the project itself
+    const delProj = await rest.removeReturning('projects', 'id=eq.' + id);
+    dbg('Deleted ' + (Array.isArray(delProj)?delProj.length:'?') + ' project rows.');
+    if (Array.isArray(delProj) && delProj.length === 0) {
+      // Nothing was deleted — almost always a row-level-security delete policy issue
+      alert('The project could not be deleted. This usually means the database delete permission (row-level security policy) is missing for the projects/photos tables. See the chat for the one-time SQL fix.');
+      return;
+    }
+    projects = projects.filter(p => p.id !== id);
+    pendingDeleteId = null;
+    closeModal('modal-delete-project');
+    renderProjects();
+  } catch(e){
+    const m = String(e.message||e);
+    dbg('Delete error: ' + m);
+    alert('Could not delete project: ' + (m.startsWith('TIMEOUT') ? m.replace('TIMEOUT: ','') : m));
+  } finally {
+    btn.disabled = false; btn.textContent = 'Delete Project';
+  }
+}
+
+function confirmDeleteProject(id){
+  dbg('Delete button clicked for project ' + id);
+  const proj = projects.find(p=>p.id===id);
+  if (!proj){ dbg('Project not found for id ' + id); return; }
+  pendingDeleteId = id;
+  $('delete-project-msg').innerHTML = `<strong style="color:var(--text)">${escHtml(proj.name)}</strong> and all its documented photos will be permanently deleted. This cannot be undone.`;
+  openModal('modal-delete-project');
+}
+
+// ─── Photos (Supabase) ────────────────────────────────────────────────────────
+async function processFiles(files){
+  const proj = currentProject(); if (!proj) return;
+  // Accept by MIME type OR by file extension — some phones report an empty MIME
+  // type for HEIC/camera files, which would otherwise be silently skipped.
+  const imgExt = /\.(jpe?g|png|gif|webp|heic|heif|bmp|tiff?)$/i;
+  const fileArr = Array.from(files).filter(f => (f.type && f.type.startsWith('image/')) || imgExt.test(f.name||''));
+  if (!fileArr.length) {
+    alert('No photos were recognized. Please choose image files (JPG, PNG, HEIC).');
+    return;
+  }
+  // Free-plan limit: 250 photos total across your workspace. Only enforced for
+  // the workspace owner (crew uploads count against the owner's plan, which the
+  // owner controls; we gate at the owner's own upload points).
+  if (!isProUser() && isOwner()) {
+    const remaining = FREE_LIMITS.photos - myTotalPhotos();
+    if (remaining <= 0) {
+      openUpgrade('You\u2019ve reached the Free plan limit of ' + FREE_LIMITS.photos + ' photos. Upgrade to Pro for unlimited photo storage.');
+      return;
+    }
+    if (fileArr.length > remaining) {
+      openUpgrade('You can only add ' + remaining + ' more photo' + (remaining!==1?'s':'') + ' on the Free plan (limit ' + FREE_LIMITS.photos + '). Upgrade to Pro for unlimited photos.');
+      return;
+    }
+  }
+  // Show progress on the upload zone so the user knows it's working (important on
+  // mobile, where compressing a large photo takes a moment).
+  const zone = $('upload-zone');
+  const zoneHTML = zone ? zone.innerHTML : '';
+  let done = 0;
+  const setProgress = () => { if (zone) zone.innerHTML = '<div class="upload-zone-title">Uploading ' + (done+1) + ' of ' + fileArr.length + '…</div><div class="upload-zone-sub">Please keep this page open</div>'; };
+  setProgress();
+  let firstId = null;
+  for (const file of fileArr) {
+    let src;
+    try { src = await readFileAsDataURL(file); }
+    catch(e){ alert('Could not read "'+(file.name||'photo')+'". Try another photo.'); continue; }
+    let data;
+    try {
+      const rows = await rest.insert('photos', {
+        project_id: proj.id,
+        user_id: currentUser.id,
+        name: file.name || 'photo.jpg',
+        src,
+        label: '',
+        notes: '',
+        customer_name: '',
+        tag: null,
+        uploaded_at: nowISO(),
+        uploader_id: currentUser.id,
+        uploader_name: displayName(),
+      });
+      data = Array.isArray(rows)?rows[0]:rows;
+    } catch(e){ alert('Could not upload "'+(file.name||'photo')+'": '+(e.message||e)); continue; }
+    if (!data) continue;
+    proj.photos.unshift(data);
+    if (!firstId) firstId = data.id;
+    const ts = nowISO();
+    try { await rest.update('projects', 'id=eq.'+proj.id, { updated_at: ts }); } catch{}
+    proj.updated_at = ts;
+    logActivity(proj, 'photo_uploaded', file.name || '');
+    done++; if (done < fileArr.length) setProgress();
+  }
+  if (zone) zone.innerHTML = zoneHTML;   // restore the upload zone
+  renderProject();
+  if (firstId) openNotesModal(firstId);
+}
+
+// Append an entry to the activity feed of the workspace that OWNS this project
+// (proj.user_id), not whatever workspace is currently being viewed.
+async function logActivity(proj, action, detail){
+  try {
+    await rest.insert('activity', {
+      owner_id: proj.user_id,
+      project_id: proj.id,
+      actor_id: currentUser.id,
+      actor_name: displayName(),
+      action,
+      detail: (detail||'').slice(0,140),
+      created_at: nowISO(),
+    });
+  } catch(e){ dbg('activity log: '+(e.message||e)); }
+}
+
+// Read a photo and downscale/compress it before upload.
+// Phone photos are often 3–12 MB; stored raw as base64 they exceed DB limits and
+// fail (especially on mobile). We draw the image onto a canvas, cap its longest
+// side, and export a quality-compressed JPEG. This makes uploads reliable & fast,
+// and converts formats the browser can decode (incl. iOS HEIC) into JPEG.
+function readFileAsDataURL(file){
+  return new Promise((resolve, reject) => {
+    const MAX_DIM = 1600;        // longest side in px — plenty for documentation
+    const QUALITY = 0.82;        // JPEG quality
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.onload = e => {
+      const img = new Image();
+      img.onerror = () => {
+        // Fallback: if the browser can't decode it (rare), upload the original data.
+        resolve(e.target.result);
+      };
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > MAX_DIM || height > MAX_DIM) {
+          if (width >= height) { height = Math.round(height * MAX_DIM / width); width = MAX_DIM; }
+          else { width = Math.round(width * MAX_DIM / height); height = MAX_DIM; }
+        }
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = width; canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', QUALITY));
+        } catch(err){
+          resolve(e.target.result);   // fallback to original on any canvas error
+        }
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function deletePhoto(id){
+  const proj = currentProject(); if (!proj) return;
+  try { await rest.remove('photos', 'id=eq.' + id); } catch(e){ alert('Could not delete photo: '+(e.message||e)); return; }
+  proj.photos = proj.photos.filter(ph=>ph.id!==id);
+  renderProject();
+}
+
+async function updatePhotoField(photoId, field, value){
+  const proj = currentProject(); if (!proj) return;
+  const photo = proj.photos.find(ph=>ph.id===photoId); if (!photo) return;
+  photo[field] = value;
+  try { await rest.update('photos', 'id=eq.' + photoId, { [field]: value }); } catch(e){ dbg('update photo: '+(e.message||e)); }
+}
+
+async function togglePhotoTag(photoId, tagVal){
+  const proj = currentProject(); if (!proj) return;
+  const photo = proj.photos.find(ph=>ph.id===photoId); if (!photo) return;
+  const newTag = photo.tag === tagVal ? null : tagVal;
+  photo.tag = newTag;
+  try { await rest.update('photos', 'id=eq.' + photoId, { tag: newTag }); } catch(e){ dbg('tag: '+(e.message||e)); }
+  renderProject();
+}
+
+function openNotesModal(photoId){
+  const proj = currentProject(); if (!proj) return;
+  const photo = proj.photos.find(ph=>ph.id===photoId); if (!photo) return;
+  pendingNotesId = photoId;
+  $('notes-label-inp').value  = photo.label || '';
+  $('notes-textarea').value   = photo.notes || '';
+  $('notes-photo-preview').innerHTML = `
+    <img src="${photo.src}" alt=""/>
+    <div class="modal-photo-info">
+      <div class="modal-photo-name">${escHtml(photo.label || photo.name)}</div>
+      <div class="modal-photo-date">${photo.uploaded_at ? fmt(photo.uploaded_at) : ''}</div>
+    </div>`;
+  openModal('modal-notes');
+  setTimeout(()=>$('notes-label-inp').focus(), 50);
+}
+
+async function saveNotes(){
+  if (!pendingNotesId) return;
+  const proj = currentProject();
+  const label = $('notes-label-inp').value.trim();
+  const notes = $('notes-textarea').value;
+  await updatePhotoField(pendingNotesId, 'label', label);
+  await updatePhotoField(pendingNotesId, 'notes', notes);
+  if (proj && notes.trim()) {
+    logActivity(proj, 'note_added', label || notes.slice(0,40));
+  }
+  pendingNotesId = null;
+  closeModal('modal-notes');
+  renderProject();
+}
+
+// ─── Crew / Activity / Assignments ─────────────────────────────────────────────
+// Invite banner: shown on the Projects page when the user has a pending invite.
+function renderInviteBanner(){
+  const slot = $('invite-banner-slot');
+  if (!slot) return;
+  if (pendingInvite){
+    slot.innerHTML = `
+      <div class="invite-banner">
+        <div class="invite-banner-icon">${svgIcon(IC.image,18)}</div>
+        <div class="invite-banner-text"><strong>${escHtml(pendingInvite.owner_name)}</strong>${pendingInvite.owner_email?` (${escHtml(pendingInvite.owner_email)})`:''} invited you to join their JobShield workspace as a crew member. Accept to start seeing the jobs they assign you.</div>
+        <div class="invite-banner-actions">
+          <button class="btn btn-ghost" id="decline-invite-btn">Decline</button>
+          <button class="btn btn-success" id="accept-invite-btn">Accept Invite</button>
+        </div>
+      </div>`;
+    $('accept-invite-btn').addEventListener('click', acceptInvite);
+    $('decline-invite-btn').addEventListener('click', declineInvite);
+    return;
+  }
+  // No pending invite. Offer a manual re-check for users who are their own owner
+  // (i.e. haven't joined a crew yet) — useful right after being invited.
+  if (isOwner()){
+    slot.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;font-size:.8rem;color:var(--text-3);">
+        <button class="link-btn" id="check-invite-btn" style="font-size:.8rem;">Check for workspace invitations</button>
+        <span id="invite-check-msg"></span>
+      </div>`;
+    const b = $('check-invite-btn');
+    if (b) b.addEventListener('click', manualCheckInvite);
+  } else {
+    slot.innerHTML = '';
+  }
+}
+
+async function manualCheckInvite(){
+  const msg = $('invite-check-msg');
+  if (msg){ msg.textContent = 'Checking…'; msg.style.color = 'var(--text-3)'; }
+  await checkPendingInvite();
+  if (pendingInvite){
+    renderInviteBanner();   // will now render the accept/decline banner
+  } else if (msg){
+    msg.textContent = 'No invitations found for your email address.';
+    msg.style.color = 'var(--text-3)';
+  }
+}
+
+async function acceptInvite(){
+  const btn = $('accept-invite-btn');
+  if (btn){ btn.disabled = true; btn.textContent = 'Joining…'; }
+  let result;
+  try {
+    result = await rest.rpc('claim_crew_invite');
+    dbg('claim_crew_invite: ' + JSON.stringify(result));
+  } catch(e){ alert('Could not accept invite: '+(e.message||e)); if(btn){btn.disabled=false;btn.textContent='Accept Invite';} return; }
+  // result is a text return value: 'joined' | 'no_invite' | 'no_user'
+  const r = Array.isArray(result) ? result[0] : result;
+  if (r && r !== 'joined') {
+    alert(r === 'no_invite' ? 'This invitation is no longer available. Ask the owner to send a new one.' : 'Could not join the workspace. Please try again.');
+    if(btn){btn.disabled=false;btn.textContent='Accept Invite';}
+    return;
+  }
+  pendingInvite = null;
+  // You keep your own workspace — this just ADDS the new one. Reload the list.
+  await loadWorkspaces();
+  await loadCrewData();
+  await loadProjects();
+  applyRoleVisibility();
+  renderWorkspaceSwitcher();
+  renderInviteBanner();
+  renderProjects();
+  alert('You\u2019ve joined the workspace! Use the workspace switcher at the top to move between your own workspace and this crew.');
+}
+
+async function declineInvite(){
+  if (!confirm('Decline this invitation? The owner would need to invite you again.')) return;
+  try { await rest.rpc('decline_crew_invite'); } catch(e){ alert('Could not decline: '+(e.message||e)); return; }
+  pendingInvite = null;
+  renderInviteBanner();
+}
+
+function avatarInitials(name){
+  const n = (name||'').trim();
+  if (!n) return '?';
+  const parts = n.split(/\s+/);
+  return (parts[0][0] + (parts[1]?parts[1][0]:'')).toUpperCase();
+}
+
+function jobsForCrew(crewId){
+  return assignments.filter(a=>a.crew_id===crewId).length;
+}
+
+function renderCrew(){
+  $('nav-user-crew').textContent = displayName();
+  // Pending invites
+  const pend = $('pending-section');
+  if (crewInvites.length){
+    pend.style.display='block';
+    $('pending-list').innerHTML = crewInvites.map(inv=>`
+      <span class="pending-pill">${escHtml(inv.email)}
+        <button class="pending-cancel" data-cancel-invite="${inv.id}" title="Cancel invite">${svgIcon(IC.x,13)}</button>
+      </span>`).join('');
+    $('pending-list').querySelectorAll('[data-cancel-invite]').forEach(b=>b.addEventListener('click',()=>cancelInvite(b.dataset.cancelInvite)));
+  } else { pend.style.display='none'; }
+
+  // Members
+  const list = $('crew-list');
+  if (!crewMembers.length){
+    list.innerHTML = `<div class="empty-state">${svgIcon(IC.image,36)}<div class="empty-title" style="margin-top:12px;">No crew yet</div><div class="empty-sub">Invite a crew member above to get started.</div></div>`;
+    return;
+  }
+  list.innerHTML = crewMembers.map(m=>{
+    const isOwnerRow = m.role==='owner';
+    const jobs = isOwnerRow ? projects.length : jobsForCrew(m.id);
+    return `<div class="crew-row">
+      <div class="crew-info">
+        <div class="crew-avatar ${isOwnerRow?'owner':''}">${avatarInitials(m.full_name||m.email)}</div>
+        <div>
+          <div class="crew-name">${escHtml(m.full_name||m.email||'Member')}${isOwnerRow?' <span style="color:var(--green);font-size:.72rem;font-weight:600;">· Owner</span>':''}${m.id===currentUser.id?' <span style="color:var(--text-3);font-size:.72rem;">(you)</span>':''}</div>
+          <div class="crew-email">${escHtml(m.email||'')}</div>
+        </div>
+      </div>
+      <div class="crew-actions">
+        <span class="crew-jobcount">${isOwnerRow?(jobs+' project'+(jobs!==1?'s':'')):(jobs+' job'+(jobs!==1?'s':''))}</span>
+        ${(!isOwnerRow && isOwner())?`<button class="btn btn-danger" data-remove-crew="${m.id}" style="padding:6px 12px;">Remove</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  list.querySelectorAll('[data-remove-crew]').forEach(b=>b.addEventListener('click',()=>removeCrew(b.dataset.removeCrew)));
+}
+
+async function sendInvite(){
+  const email = $('invite-email').value.trim().toLowerCase();
+  showErr('invite-error',''); $('invite-success').style.display='none';
+  if (!email || !email.includes('@')){ showErr('invite-error','Please enter a valid email address.'); return; }
+  const btn = $('invite-btn');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  try {
+    await rest.insert('crew_invites', { owner_id: currentUser.id, email: email });
+    const ok = $('invite-success');
+    ok.textContent = email + ' can now create an account with this email to join your workspace.';
+    ok.style.display = 'block';
+    $('invite-email').value = '';
+    await loadCrewData();
+    renderCrew();
+  } catch(e){
+    const m = String(e.message||e);
+    showErr('invite-error', m.includes('duplicate')||m.includes('unique') ? 'That email has already been invited.' : (m.startsWith('TIMEOUT')?m.replace('TIMEOUT: ',''):m));
+  } finally {
+    btn.disabled = false; btn.textContent = 'Send Invite';
+  }
+}
+
+async function cancelInvite(id){
+  try { await rest.remove('crew_invites', 'id=eq.'+id); } catch(e){ alert('Could not cancel: '+(e.message||e)); return; }
+  crewInvites = crewInvites.filter(i=>i.id!==id);
+  renderCrew();
+}
+
+async function removeCrew(crewId){
+  if (!confirm('Remove this crew member? They will lose access to this workspace and its assigned jobs. Their own personal workspace is unaffected.')) return;
+  try {
+    await rest.remove('job_assignments', 'crew_id=eq.'+crewId+'&owner_id=eq.'+currentUser.id);
+    await rest.remove('memberships', 'member_id=eq.'+crewId+'&owner_id=eq.'+currentUser.id);
+  } catch(e){ alert('Could not remove crew member: '+(e.message||e)); return; }
+  await loadCrewData(); await loadProjects();
+  renderCrew();
+}
+
+// Assigned crew on the project detail page
+function renderAssignedCrew(proj){
+  const section = $('assigned-crew-section');
+  // Crew members of this workspace, excluding the owner
+  const crewOnly = crewMembers.filter(m=>m.role!=='owner');
+  const assignedHere = assignments.filter(a=>a.project_id===proj.id);
+  // Only the owner manages assignments; crew just see who's on the job
+  if (!isOwner() && assignedHere.length===0){ section.style.display='none'; return; }
+  section.style.display='block';
+
+  // Assign dropdown (owner only)
+  const ctrl = $('assign-control');
+  if (isOwner()){
+    const unassigned = crewOnly.filter(m=>!assignedHere.some(a=>a.crew_id===m.id));
+    if (unassigned.length){
+      ctrl.innerHTML = `<select class="assign-select" id="assign-select">
+        <option value="">+ Assign crew…</option>
+        ${unassigned.map(m=>`<option value="${m.id}">${escHtml(m.full_name||m.email)}</option>`).join('')}
+      </select>`;
+      $('assign-select').addEventListener('change', e=>{ if(e.target.value) assignCrew(proj.id, e.target.value); });
+    } else if (!crewOnly.length){
+      ctrl.innerHTML = `<span style="font-size:.75rem;color:var(--text-3)">Invite crew on the Crew page first</span>`;
+    } else {
+      ctrl.innerHTML = `<span style="font-size:.75rem;color:var(--text-3)">All crew assigned</span>`;
+    }
+  } else { ctrl.innerHTML=''; }
+
+  const chips = $('assigned-chips');
+  if (!assignedHere.length){
+    chips.innerHTML = `<span style="font-size:.8rem;color:var(--text-3)">No crew assigned yet.</span>`;
+    return;
+  }
+  chips.innerHTML = assignedHere.map(a=>`
+    <span class="crew-chip">
+      <span class="crew-avatar" style="width:22px;height:22px;font-size:.65rem;">${avatarInitials(crewName(a.crew_id))}</span>
+      ${escHtml(crewName(a.crew_id))}
+      ${isOwner()?`<button class="x" data-unassign="${a.id}" title="Unassign">${svgIcon(IC.x,12)}</button>`:''}
+    </span>`).join('');
+  chips.querySelectorAll('[data-unassign]').forEach(b=>b.addEventListener('click',()=>unassignCrew(b.dataset.unassign)));
+}
+
+async function assignCrew(projectId, crewId){
+  try {
+    const rows = await rest.insert('job_assignments', { project_id: projectId, crew_id: crewId, owner_id: currentUser.id });
+    const row = Array.isArray(rows)?rows[0]:rows;
+    if (row) assignments.push(row);
+  } catch(e){ alert('Could not assign crew: '+(e.message||e)); return; }
+  renderAssignedCrew(currentProject());
+}
+
+async function unassignCrew(assignmentId){
+  try { await rest.remove('job_assignments', 'id=eq.'+assignmentId); } catch(e){ alert('Could not unassign: '+(e.message||e)); return; }
+  assignments = assignments.filter(a=>a.id!==assignmentId);
+  renderAssignedCrew(currentProject());
+}
+
+// Activity feed
+async function loadActivity(){
+  if (!workspaceOwnerId) return;
+  try { activityFeed = await rest.select('activity', 'owner_id=eq.'+workspaceOwnerId+'&select=*&order=created_at.desc&limit=100') || []; }
+  catch(e){ dbg('activity select: '+(e.message||e)); activityFeed = []; }
+}
+
+function timeAgo(iso){
+  const s = Math.floor((Date.now() - new Date(iso).getTime())/1000);
+  if (s<60) return 'just now';
+  const m=Math.floor(s/60); if(m<60) return m+' min ago';
+  const h=Math.floor(m/60); if(h<24) return h+' hr ago';
+  const d=Math.floor(h/24); if(d<7) return d+' day'+(d!==1?'s':'')+' ago';
+  return fmt(iso);
+}
+
+function renderActivity(){
+  $('nav-user-activity').textContent = displayName();
+  const content = $('feed-content');
+  if (!activityFeed.length){
+    content.innerHTML = `<div class="empty-state">${svgIcon(IC.clock,36)}<div class="empty-title" style="margin-top:12px;">No activity yet</div><div class="empty-sub">Photo uploads and notes will appear here as your crew works.</div></div>`;
+    return;
+  }
+  const projName = id => { const p = projects.find(x=>x.id===id); return p?p.name:'a project'; };
+  content.innerHTML = '<div class="feed">' + activityFeed.map(a=>{
+    let verb, icon, target;
+    if (a.action === 'photo_uploaded') {
+      verb = 'uploaded a photo to';
+      target = `<strong>${escHtml(projName(a.project_id))}</strong>`;
+      icon = `<div class="feed-icon photo">${svgIcon(IC.image,16)}</div>`;
+    } else if (a.action === 'note_added') {
+      verb = 'added a note on';
+      target = `<strong>${escHtml(projName(a.project_id))}</strong>`;
+      icon = `<div class="feed-icon note">${svgIcon(IC.notes,16)}</div>`;
+    } else if (a.action === 'invite_accepted') {
+      verb = ''; target = 'joined your workspace';
+      icon = `<div class="feed-icon" style="background:var(--green-dim);color:var(--green);border:1px solid rgba(34,211,122,.2)">${svgIcon(IC.check,16)}</div>`;
+    } else if (a.action === 'invite_declined') {
+      verb = ''; target = 'declined your invitation';
+      icon = `<div class="feed-icon" style="background:var(--red-dim);color:var(--red);border:1px solid rgba(240,82,82,.2)">${svgIcon(IC.x,16)}</div>`;
+    } else {
+      verb = ''; target = escHtml(a.detail||'did something');
+      icon = `<div class="feed-icon note">${svgIcon(IC.notes,16)}</div>`;
+    }
+    const detailSuffix = (a.action==='photo_uploaded'||a.action==='note_added') && a.detail ? ` — ${escHtml(a.detail)}` : '';
+    return `<div class="feed-item">
+      ${icon}
+      <div class="feed-body">
+        <div class="feed-text"><strong>${escHtml(a.actor_name||'Someone')}</strong> ${verb?verb+' ':''}${target}${detailSuffix}</div>
+        <div class="feed-meta">${timeAgo(a.created_at)} · ${fmt(a.created_at)}</div>
+      </div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+// ─── Plan / Pricing / Billing UI ──────────────────────────────────────────────
+const PRO_FEATURES = [
+  'Unlimited projects',
+  'Unlimited photos',
+  'Advanced project timelines',
+  'Detailed photo notes & documentation',
+  'Crew collaboration & team members',
+  'Activity tracking & audit logs',
+  'Evidence / dispute documentation tools',
+  'Priority support',
+  'No free-plan limitations',
+];
+
+function checkIcon(){ return '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="check"><path d="M20 6L9 17l-5-5"/></svg>'; }
+
+async function goToPricing(){
+  showScreen('screen-pricing');
+  renderPricing();
+}
+async function goToBilling(){
+  showScreen('screen-billing');
+  try { await loadSubscription(); } catch(e){ dbg('billing sub load: '+(e.message||e)); }
+  renderBilling();
+}
+
+function renderPricing(){
+  $('nav-user-pricing').textContent = displayName();
+  // Pro feature list
+  $('pro-feature-list').innerHTML = PRO_FEATURES.map(f=>`<li>${checkIcon()}<span>${escHtml(f)}</span></li>`).join('');
+  const pro = isProUser();
+  // Free card CTA
+  $('free-cta-slot').innerHTML = pro
+    ? '<div class="plan-current">Included with Free</div>'
+    : '<div class="plan-current">Your current plan</div>';
+  // Pro card CTA
+  $('pro-cta-slot').innerHTML = pro
+    ? '<div class="plan-current" style="border-color:rgba(79,142,247,.4);color:var(--blue)">Your current plan</div>'
+    : '<button class="btn btn-primary plan-cta" id="pricing-upgrade-btn">Upgrade to Pro</button>';
+  const b = $('pricing-upgrade-btn');
+  if (b) b.addEventListener('click', ()=>startCheckout());
+}
+
+function renderBilling(){
+  $('nav-user-billing').textContent = displayName();
+  const pro = isProUser();
+  const sub = mySubscription || { plan:'free', status:'inactive' };
+  const c = $('billing-content');
+
+  let statusPill, statusNote = '';
+  if (pro) {
+    statusPill = '<span class="plan-pill pro">Pro</span>';
+    if (sub.current_period_end) {
+      const d = fmt(sub.current_period_end);
+      statusNote = sub.status === 'canceled'
+        ? `Your Pro access ends on ${d}.`
+        : `Renews on ${d}.`;
+    }
+  } else if (sub.status === 'past_due') {
+    statusPill = '<span class="plan-pill warn">Payment failed</span>';
+    statusNote = 'Your last payment failed. Update your payment method to keep Pro.';
+  } else {
+    statusPill = '<span class="plan-pill free">Free</span>';
+    statusNote = 'You\u2019re on the Free plan.';
+  }
+
+  // Usage meters (only meaningful on Free)
+  let usageHtml = '';
+  if (!pro) {
+    const projCount = projects.length, photoCount = myTotalPhotos();
+    const projPct = Math.min(100, Math.round(projCount / FREE_LIMITS.projects * 100));
+    const photoPct = Math.min(100, Math.round(photoCount / FREE_LIMITS.photos * 100));
+    usageHtml = `
+      <div class="billing-card">
+        <div class="usage-row">
+          <div class="usage-label"><span>Projects</span><span>${projCount} / ${FREE_LIMITS.projects}</span></div>
+          <div class="usage-bar"><div class="usage-fill ${projPct>=100?'full':''}" style="width:${projPct}%"></div></div>
+        </div>
+        <div class="usage-row">
+          <div class="usage-label"><span>Photos</span><span>${photoCount} / ${FREE_LIMITS.photos}</span></div>
+          <div class="usage-bar"><div class="usage-fill ${photoPct>=100?'full':''}" style="width:${photoPct}%"></div></div>
+        </div>
+      </div>`;
+  }
+
+  // Action buttons differ by plan
+  let actions;
+  if (pro) {
+    actions = `<button class="btn btn-ghost" id="billing-portal-btn">Manage billing</button>
+               <button class="btn btn-ghost" id="billing-portal-btn2">Update payment method</button>`;
+  } else {
+    actions = `<button class="btn btn-primary" id="billing-upgrade-btn">Upgrade to Pro</button>
+               <button class="btn btn-ghost" id="billing-pricing-btn">Compare plans</button>`;
+  }
+
+  c.innerHTML = `
+    <div class="billing-card">
+      <div class="billing-row">
+        <div>
+          <div class="billing-plan-name">${pro?'JobShield Pro':'JobShield Free'} ${statusPill}</div>
+          <div class="billing-sub">${escHtml(statusNote)}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:1.4rem;font-weight:700;color:var(--text)">${pro?'$33':'$0'}</div>
+          <div style="font-size:.75rem;color:var(--text-3)">per month</div>
+        </div>
+      </div>
+      <div class="billing-actions">${actions}</div>
+    </div>
+    ${usageHtml}`;
+
+  // Wire buttons
+  const up = $('billing-upgrade-btn'); if (up) up.addEventListener('click', ()=>startCheckout());
+  const cmp = $('billing-pricing-btn'); if (cmp) cmp.addEventListener('click', goToPricing);
+  const p1 = $('billing-portal-btn'); if (p1) p1.addEventListener('click', openBillingPortal);
+  const p2 = $('billing-portal-btn2'); if (p2) p2.addEventListener('click', openBillingPortal);
+}
+
+// Open the upgrade modal with a contextual reason message.
+function openUpgrade(reason){
+  if (reason) $('upgrade-reason').textContent = reason;
+  openModal('modal-upgrade');
+}
+
+// ── Stripe integration (calls the Edge Functions) ──
+// Base URL for your deployed Edge Functions.
+const FUNCTIONS_URL = SB_URL + '/functions/v1';
+
+async function callFunction(name){
+  if (!accessToken) throw new Error('Please sign in again.');
+  const resp = await fetch(FUNCTIONS_URL + '/' + name, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + accessToken,
+      'apikey': SB_KEY,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({}),
+  });
+  const data = await resp.json().catch(()=>({}));
+  if (!resp.ok) throw new Error(data.error || ('Request failed (' + resp.status + ')'));
+  return data;
+}
+
+async function startCheckout(){
+  closeModal('modal-upgrade');
+  const restore = setBusy(['pricing-upgrade-btn','billing-upgrade-btn','upgrade-now'], 'Loading…');
+  try {
+    const { url } = await callFunction('create-checkout');
+    if (url) window.location.href = url;       // hand off to Stripe Checkout
+    else throw new Error('No checkout URL returned.');
+  } catch (e){
+    alert('Could not start checkout: ' + (e.message||e));
+    restore();
+  }
+}
+
+async function openBillingPortal(){
+  const restore = setBusy(['billing-portal-btn','billing-portal-btn2'], 'Opening…');
+  try {
+    const { url } = await callFunction('customer-portal');
+    if (url) window.location.href = url;       // hand off to Stripe Customer Portal
+    else throw new Error('No portal URL returned.');
+  } catch (e){
+    alert('Could not open billing portal: ' + (e.message||e));
+    restore();
+  }
+}
+
+// Disable a set of buttons (by id) while a request is in flight; returns a restore fn.
+function setBusy(ids, label){
+  const saved = [];
+  ids.forEach(id => { const el=$(id); if(el){ saved.push([el, el.textContent, el.disabled]); el.disabled=true; el.textContent=label; } });
+  return () => saved.forEach(([el,txt,dis]) => { el.disabled=dis; el.textContent=txt; });
+}
+
+// After returning from Stripe Checkout, read ?checkout=success|cancelled.
+async function handleCheckoutReturn(){
+  const params = new URLSearchParams(window.location.search);
+  const status = params.get('checkout');
+  if (!status) return;
+  // Clean the query string out of the address bar.
+  history.replaceState(null, '', window.location.origin + window.location.pathname);
+  if (status === 'cancelled'){
+    alert('Checkout cancelled — no charge was made. You can upgrade anytime.');
+    return;
+  }
+  if (status === 'success'){
+    // The webhook updates the DB; it usually lands within a second or two.
+    // Poll a few times so the UI flips to Pro without needing a manual refresh.
+    for (let i=0; i<6; i++){
+      await loadSubscription();
+      if (isProUser()) break;
+      await new Promise(r=>setTimeout(r, 1500));
+    }
+    renderProjects();
+    if (isProUser()){
+      alert('Welcome to JobShield Pro! All Pro features are now unlocked.');
+    } else {
+      alert('Payment received — your Pro access is being activated and should appear within a minute. If it doesn\u2019t, refresh the page.');
+    }
+    goToBilling();
+  }
+}
+
+// ─── Routing ──────────────────────────────────────────────────────────────────
+async function goToProjects(){
+  currentProjectId = null;
+  showScreen('screen-projects');
+  renderProjects();
+}
+async function goToTimeline(){
+  showScreen('screen-timeline');
+  renderTimeline();
+}
+async function goToCrew(){
+  if (!isOwner()) { goToProjects(); return; }   // crew can't open crew mgmt
+  if (!isProUser()) { openUpgrade('Crew collaboration is a Pro feature. Upgrade to invite team members and assign them to jobs.'); return; }
+  showScreen('screen-crew');
+  try { await loadCrewData(); await loadProjects(); } catch(e){ dbg('crew refresh: '+(e.message||e)); }
+  renderCrew();
+}
+async function goToActivity(){
+  showScreen('screen-activity');
+  try { await loadActivity(); } catch(e){ dbg('activity load: '+(e.message||e)); }
+  renderActivity();
+}
+function openProject(id){
+  currentProjectId = id;
+  showScreen('screen-project');
+  renderProject();
+}
+
+// ─── Render: Projects ─────────────────────────────────────────────────────────
+function renderProjects(){
+  const name = displayName();
+  $('nav-user-projects').textContent = name;
+  renderInviteBanner();
+  // Plan button (only in your own workspace; crew don't manage billing)
+  const planBtn = $('plan-btn');
+  if (planBtn){
+    if (isOwner()){
+      planBtn.style.display = '';
+      planBtn.innerHTML = isProUser()
+        ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l7 2.6v5.4c0 4.6-3 8.4-7 10-4-1.6-7-5.4-7-10V5.1z"/><path d="M9 11.8l2.1 2.1L15 9.9"/></svg> Pro'
+        : 'Upgrade to Pro';
+      planBtn.classList.toggle('btn-primary', !isProUser());
+      planBtn.classList.toggle('btn-ghost', isProUser());
+    } else {
+      planBtn.style.display = 'none';
+    }
+  }
+  const totalPhotos = projects.reduce((a,p)=>a+p.photos.length,0);
+  $('projects-subtitle').textContent = `${projects.length} project${projects.length!==1?'s':''} · ${totalPhotos} photo${totalPhotos!==1?'s':''} documented`;
+  $('proof-banner-projects').style.display = projects.length > 0 ? 'flex' : 'none';
+  const grid = $('proj-grid');
+  if (!projects.length){
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">${svgIcon(IC.folder,40)}<div class="empty-title" style="margin-top:14px;">No projects yet</div><div class="empty-sub">Create your first project to start documenting jobsite records.</div></div>`;
+    return;
+  }
+  grid.innerHTML = projects.map(p=>{
+    const before = p.photos.filter(ph=>ph.tag==='before').length;
+    const after  = p.photos.filter(ph=>ph.tag==='after').length;
+    return `<div class="proj-card" data-id="${p.id}">
+      <div class="proj-card-top">
+        <div class="proj-icon-wrap">${svgIcon(IC.folder,17)}</div>
+        <button class="proj-del-btn" data-del="${p.id}">${svgIcon(IC.trash,14)}</button>
+      </div>
+      <div class="proj-name">${escHtml(p.name)}</div>
+      <div class="proj-meta">${p.updated_at?'Updated '+fmt(p.updated_at):'Created '+fmt(p.created_at)}</div>
+      <div class="proj-footer">
+        <div class="proj-stat">${svgIcon(IC.image,13)} ${p.photos.length} photo${p.photos.length!==1?'s':''}</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          ${before?`<span class="badge red">${before} before</span>`:''}
+          ${after?`<span class="badge green">${after} after</span>`:''}
+          ${p.photos.length>0&&!before&&!after?`<span class="badge green">${svgIcon(IC.check,11)} Documented</span>`:''}
+          ${p.photos.length===0?`<span class="badge">No photos</span>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  grid.onclick = (e) => {
+    const delBtn = e.target.closest('[data-del]');
+    if (delBtn){ e.stopPropagation(); confirmDeleteProject(delBtn.dataset.del); return; }
+    const card = e.target.closest('.proj-card');
+    if (card && card.dataset.id){ openProject(card.dataset.id); }
+  };
+}
+
+// ─── Render: Project Detail ───────────────────────────────────────────────────
+function renderProject(){
+  const proj = currentProject(); if (!proj) return;
+  $('nav-user-project').textContent = displayName();
+  $('project-title').textContent = proj.name;
+  renderAssignedCrew(proj);
+  const dateStr = proj.updated_at?`Updated ${fmt(proj.updated_at)}`:`Created ${fmt(proj.created_at)}`;
+  const contract = money(proj.contract_price);
+  const cost     = money(proj.total_job_cost);
+  let profitStr = '';
+  if (proj.contract_price!=null && proj.total_job_cost!=null) {
+    const profit = Number(proj.contract_price) - Number(proj.total_job_cost);
+    const sign = profit >= 0 ? '' : '−';
+    profitStr = ` · Profit ${sign}$${Math.abs(profit).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+  }
+  const finBits = [];
+  if (proj.customer_name) finBits.push(`Customer: ${proj.customer_name}`);
+  if (contract) finBits.push(`Contract ${contract}`);
+  if (cost) finBits.push(`Cost ${cost}`);
+  $('project-subtitle').textContent = dateStr + (finBits.length?` · ${finBits.join(' · ')}${profitStr}`:'');
+  const photos = proj.photos;
+  if (!photos.length){
+    $('stats-bar').style.display='none'; $('photos-section').style.display='none'; $('photos-empty').style.display='block';
+    return;
+  }
+  $('photos-empty').style.display='none';
+  const before=photos.filter(ph=>ph.tag==='before').length, after=photos.filter(ph=>ph.tag==='after').length;
+  $('stats-bar').style.display='flex';
+  $('stats-bar').innerHTML=`
+    <div class="stat-pill">${svgIcon(IC.image,13)} <strong>${photos.length}</strong> photo${photos.length!==1?'s':''}</div>
+    <div class="stat-pill">${svgIcon(IC.clock,13)} Last upload ${fmt(photos[0].uploaded_at)}</div>
+    ${before?`<div class="stat-pill" style="color:#a98af0"><strong>${before}</strong> before</div>`:''}
+    ${after?`<div class="stat-pill" style="color:#6ea2f5"><strong>${after}</strong> after</div>`:''}
+  `;
+  $('photos-section').style.display='block';
+  $('photo-grid').innerHTML=photos.map(ph=>`
+    <div class="photo-card" data-photo-id="${ph.id}">
+      <div class="photo-thumb">
+        <img src="${ph.src}" alt="${escHtml(ph.label||ph.name)}" loading="lazy"/>
+        <div class="photo-overlay"></div>
+        <div class="photo-actions">
+          <a class="photo-action-btn dl" href="${ph.src}" download="${escHtml(ph.label?ph.label+'.jpg':ph.name)}">${svgIcon(IC.download,13)}</a>
+          <button class="photo-action-btn del" data-del-photo="${ph.id}">${svgIcon(IC.trash,13)}</button>
+        </div>
+        <div class="photo-tag-strip">
+          <button class="photo-tag-pill before${ph.tag==='before'?' active':''}" data-tag-id="${ph.id}" data-tag-val="before">Before</button>
+          <button class="photo-tag-pill after${ph.tag==='after'?' active':''}" data-tag-id="${ph.id}" data-tag-val="after">After</button>
+        </div>
+      </div>
+      <div class="photo-meta">
+        <div class="photo-label-row">
+          <span class="photo-label-display" data-open-notes="${ph.id}">${ph.label?escHtml(ph.label):'<span style="color:var(--text-3);font-style:italic;">Add label…</span>'}</span>
+          <button class="photo-notes-btn${ph.notes?' active':''}" data-notes-id="${ph.id}">${svgIcon(IC.notes,13)}</button>
+        </div>
+        ${ph.uploaded_at?`<div class="photo-date">Uploaded ${fmt(ph.uploaded_at)}${ph.uploader_name?' · '+escHtml(ph.uploader_name):''}</div>`:''}
+      </div>
+    </div>
+  `).join('');
+  $('photo-grid').querySelectorAll('[data-del-photo]').forEach(b=>b.addEventListener('click',()=>deletePhoto(b.dataset.delPhoto)));
+  $('photo-grid').querySelectorAll('.photo-notes-btn').forEach(b=>b.addEventListener('click',()=>openNotesModal(b.dataset.notesId)));
+  $('photo-grid').querySelectorAll('[data-open-notes]').forEach(b=>b.addEventListener('click',()=>openNotesModal(b.dataset.openNotes)));
+  $('photo-grid').querySelectorAll('.photo-tag-pill').forEach(b=>b.addEventListener('click',()=>togglePhotoTag(b.dataset.tagId,b.dataset.tagVal)));
+}
+
+// ─── Render: Timeline ─────────────────────────────────────────────────────────
+function renderTimeline(){
+  $('nav-user-timeline').textContent = displayName();
+  const allPhotos=projects.flatMap(p=>p.photos);
+  const tb=allPhotos.filter(ph=>ph.tag==='before').length, ta=allPhotos.filter(ph=>ph.tag==='after').length;
+  $('tl-summary-bar').innerHTML=`
+    <div class="tl-summary-card"><div class="tl-summary-label">Projects</div><div class="tl-summary-value">${projects.length}</div><div class="tl-summary-sub">total documented</div></div>
+    <div class="tl-summary-card"><div class="tl-summary-label">Photos</div><div class="tl-summary-value">${allPhotos.length}</div><div class="tl-summary-sub">across all projects</div></div>
+    <div class="tl-summary-card" style="border-color:rgba(124,58,237,.28)"><div class="tl-summary-label" style="color:#a98af0">Before</div><div class="tl-summary-value" style="color:#a98af0">${tb}</div><div class="tl-summary-sub">tagged photos</div></div>
+    <div class="tl-summary-card" style="border-color:rgba(37,99,235,.28)"><div class="tl-summary-label" style="color:#6ea2f5">After</div><div class="tl-summary-value" style="color:#6ea2f5">${ta}</div><div class="tl-summary-sub">tagged photos</div></div>
+  `;
+  const content=$('tl-content');
+  if (!projects.length){
+    content.innerHTML=`<div class="tl-empty"><div class="tl-empty-icon">${svgIcon(IC.camera,48)}</div><div class="tl-empty-title">No projects yet</div><div class="tl-empty-sub">Create a project and upload photos to see your jobsite timeline here.</div></div>`;
+    return;
+  }
+  const sorted=[...projects].sort((a,b)=>new Date(b.updated_at||b.created_at)-new Date(a.updated_at||a.created_at));
+  content.innerHTML=sorted.map(proj=>{
+    const before=proj.photos.filter(ph=>ph.tag==='before'),after=proj.photos.filter(ph=>ph.tag==='after'),untagged=proj.photos.filter(ph=>!ph.tag);
+    const thumb=ph=>`<div class="tl-photo-item" data-src="${ph.src}" data-label="${escHtml(ph.label||ph.name)}" data-date="${ph.uploaded_at?fmt(ph.uploaded_at):''}"><img src="${ph.src}" alt="" loading="lazy"/>${ph.tag?`<div class="tl-photo-tag ${ph.tag}">${ph.tag}</div>`:''} ${ph.label?`<div class="tl-photo-label">${escHtml(ph.label)}</div>`:''}</div>`;
+    const bSec=before.length?`<div class="tl-ba-section"><div class="tl-ba-label before-label">Before — ${before.length} photo${before.length!==1?'s':''}</div><div class="tl-photo-row">${before.map(thumb).join('')}</div></div>`:'';
+    const aSec=after.length?`<div class="tl-ba-section"><div class="tl-ba-label after-label">After — ${after.length} photo${after.length!==1?'s':''}</div><div class="tl-photo-row">${after.map(thumb).join('')}</div></div>`:'';
+    const uSec=untagged.length?`<div class="tl-untagged-section"><div class="tl-untagged-label">Untagged — ${untagged.length}</div><div class="tl-photo-row">${untagged.map(thumb).join('')}</div></div>`:'';
+    const noPh=!proj.photos.length?`<div style="padding:20px 0;font-size:.83rem;color:var(--text-3);">No photos uploaded yet.</div>`:'';
+    return `<div class="tl-project">
+      <div class="tl-project-header">
+        <div><div class="tl-project-name" data-open="${proj.id}">${escHtml(proj.name)}</div><div class="tl-project-meta">${proj.updated_at?'Updated '+fmt(proj.updated_at):'Created '+fmt(proj.created_at)} · ${proj.photos.length} photo${proj.photos.length!==1?'s':''}</div></div>
+        <div class="tl-project-tags">
+          ${before.length?`<span class="badge red">${before.length} before</span>`:''}
+          ${after.length?`<span class="badge green">${after.length} after</span>`:''}
+          ${proj.photos.length>0&&!before.length&&!after.length?`<span class="badge green">${svgIcon(IC.check,11)} Documented</span>`:''}
+          ${proj.photos.length===0?`<span class="badge">No photos</span>`:''}
+        </div>
+      </div>${bSec}${aSec}${uSec}${noPh}
+    </div>`;
+  }).join('');
+  content.querySelectorAll('.tl-project-name[data-open]').forEach(el=>el.addEventListener('click',()=>openProject(el.dataset.open)));
+  content.querySelectorAll('.tl-photo-item').forEach(item=>item.addEventListener('click',()=>openLightbox(item.dataset.src,item.dataset.label,item.dataset.date)));
+}
+
+function openLightbox(src,label,date){
+  $('lightbox-img').src=src; $('lightbox-label').textContent=label||''; $('lightbox-date').textContent=date||'';
+  $('lightbox').classList.add('open');
+}
+function closeLightbox(){ $('lightbox').classList.remove('open'); $('lightbox-img').src=''; }
+
+// ─── Boot ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+
+  injectLogos();
+  primeTrustIcons();
+  showScreen('screen-login');
+  document.getElementById('screen-login').classList.add('intro');  // drop-in intro
+
+  // FIRST: if the user arrived via a password-reset email link, show the reset screen
+  // instead of restoring a normal session.
+  const inRecovery = checkForRecoveryToken();
+
+  // Restore a saved session if one exists (skip if we're mid password-reset)
+  if (!inRecovery) {
+    loadTokens();
+    if (accessToken) {
+      try {
+        const user = await authGetUser();
+        if (user) {
+          currentUser = user;
+          sessionLoaded = true;
+          await enterApp();
+          await handleCheckoutReturn();   // if we just came back from Stripe
+        }
+      } catch(e){ dbg('session restore: '+(e.message||e)); }
+    }
+  }
+
+  // Auth listeners
+  $('login-btn').addEventListener('click', login);
+  $('login-email').addEventListener('keydown', e=>e.key==='Enter'&&login());
+  $('login-password').addEventListener('keydown', e=>e.key==='Enter'&&login());
+  $('create-account-btn').addEventListener('click', ()=>{
+    ['signup-name','signup-email','signup-password','signup-confirm'].forEach(id=>$(id).value='');
+    $('signup-agree').checked = false;
+    showErr('signup-error','');
+    openModal('modal-create-account');
+    setTimeout(()=>$('signup-name').focus(),50);
+  });
+  $('cancel-create-account').addEventListener('click', ()=>closeModal('modal-create-account'));
+  $('modal-create-account').addEventListener('click', e=>{if(e.target===$('modal-create-account'))closeModal('modal-create-account');});
+  $('confirm-create-account').addEventListener('click', signup);
+
+  // Legal modal (Terms / Privacy / Liability)
+  function openLegal(tab){
+    document.querySelectorAll('.legal-tab').forEach(t=>t.classList.toggle('active', t.dataset.legalTab===tab));
+    document.querySelectorAll('.legal-section').forEach(s=>s.classList.toggle('active', s.id==='legal-'+tab));
+    $('modal-legal').querySelector('.legal-body').scrollTop = 0;
+    openModal('modal-legal');
+  }
+  $('open-legal-tos').addEventListener('click', ()=>openLegal('tos'));
+  $('open-legal-privacy').addEventListener('click', ()=>openLegal('privacy'));
+  $('open-legal-liability').addEventListener('click', ()=>openLegal('liability'));
+  $('close-legal').addEventListener('click', ()=>closeModal('modal-legal'));
+  $('modal-legal').addEventListener('click', e=>{if(e.target===$('modal-legal'))closeModal('modal-legal');});
+  document.querySelectorAll('.legal-tab').forEach(t=>t.addEventListener('click', ()=>openLegal(t.dataset.legalTab)));
+
+  // Forgot password
+  $('forgot-password-link').addEventListener('click', ()=>{
+    $('forgot-email').value = $('login-email').value.trim();
+    showErr('forgot-error',''); $('forgot-success').style.display='none';
+    openModal('modal-forgot-password');
+    setTimeout(()=>$('forgot-email').focus(),50);
+  });
+  $('cancel-forgot').addEventListener('click', ()=>closeModal('modal-forgot-password'));
+  $('modal-forgot-password').addEventListener('click', e=>{if(e.target===$('modal-forgot-password'))closeModal('modal-forgot-password');});
+  $('confirm-forgot').addEventListener('click', sendResetEmail);
+  $('forgot-email').addEventListener('keydown', e=>e.key==='Enter'&&sendResetEmail());
+
+  // Reset password screen
+  $('reset-btn').addEventListener('click', submitNewPassword);
+  $('reset-confirm').addEventListener('keydown', e=>e.key==='Enter'&&submitNewPassword());
+  $('reset-password').addEventListener('keydown', e=>e.key==='Enter'&&submitNewPassword());
+  $('reset-back-btn').addEventListener('click', ()=>{ saveTokens(null,null); showScreen('screen-login'); });
+
+  // Crew management
+  $('invite-btn').addEventListener('click', sendInvite);
+  $('invite-email').addEventListener('keydown', e=>e.key==='Enter'&&sendInvite());
+
+  // Upgrade modal
+  $('upgrade-later').addEventListener('click', ()=>closeModal('modal-upgrade'));
+  $('upgrade-now').addEventListener('click', startCheckout);
+  $('modal-upgrade').addEventListener('click', e=>{if(e.target===$('modal-upgrade'))closeModal('modal-upgrade');});
+
+  $('logout-btn').addEventListener('click', logout);
+
+  // Projects
+  $('new-project-btn').addEventListener('click', ()=>{$('new-project-input').value='';$('new-project-customer').value='';$('new-project-contract').value='';$('new-project-cost').value='';openModal('modal-new-project');setTimeout(()=>$('new-project-input').focus(),50);});
+  $('cancel-new-project').addEventListener('click', ()=>closeModal('modal-new-project'));
+  $('confirm-new-project').addEventListener('click', createProject);
+  $('new-project-input').addEventListener('keydown', e=>e.key==='Enter'&&createProject());
+  $('modal-new-project').addEventListener('click', e=>{if(e.target===$('modal-new-project'))closeModal('modal-new-project');});
+  $('cancel-delete-project').addEventListener('click', ()=>{pendingDeleteId=null;closeModal('modal-delete-project');});
+  $('confirm-delete-project').addEventListener('click', deleteProject);
+  $('modal-delete-project').addEventListener('click', e=>{if(e.target===$('modal-delete-project'))closeModal('modal-delete-project');});
+
+  // Upload
+  $('upload-btn').addEventListener('click', ()=>$('file-input').click());
+  $('file-input').addEventListener('change', e=>{processFiles(e.target.files);e.target.value='';});
+  const zone=$('upload-zone');
+  zone.addEventListener('click', ()=>$('file-input').click());
+  zone.addEventListener('dragover', e=>{e.preventDefault();zone.classList.add('drag');});
+  zone.addEventListener('dragleave', ()=>zone.classList.remove('drag'));
+  zone.addEventListener('drop', e=>{e.preventDefault();zone.classList.remove('drag');processFiles(e.dataTransfer.files);});
+
+  // Notes modal
+  $('cancel-notes').addEventListener('click', ()=>{pendingNotesId=null;closeModal('modal-notes');renderProject();});
+  $('save-notes').addEventListener('click', saveNotes);
+  $('modal-notes').addEventListener('click', e=>{if(e.target===$('modal-notes'))saveNotes();});
+
+  // Lightbox
+  $('lightbox-close').addEventListener('click', closeLightbox);
+  $('lightbox').addEventListener('click', e=>{if(e.target===$('lightbox'))closeLightbox();});
+
+  document.addEventListener('keydown', e=>{
+    if(e.key==='Escape'){
+      closeLightbox();
+      closeModal('modal-new-project');
+      closeModal('modal-delete-project');
+      closeModal('modal-create-account');
+      closeModal('modal-forgot-password');
+      closeModal('modal-legal');
+      closeModal('modal-upgrade');
+      if($('modal-notes').classList.contains('open'))saveNotes();
+    }
+  });
+});
+</script>
+</body>
+</html>
